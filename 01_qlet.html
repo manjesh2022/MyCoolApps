@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QLet</title>
+  <link rel="icon" href="C:\Users\nichiuser\Desktop\MyPages\0favicon\qlet.png" type="image/png" />
+  <style>
+    body {
+      background-color: #0a092d;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .file-label {
+      background-color: #4255ff;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+	.refresh-btn {
+	  background-color: #4255ff;
+	  color: white;
+	  padding: 10px 18px;
+	  border-radius: 8px;
+	  border: none;
+	  cursor: pointer;
+	  font-size: 14px;
+	}
+
+	.refresh-btn:hover {
+	  background-color: #3547cc;
+	}
+
+    .file-label:hover {
+      background-color: #3547cc;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    #sheetSelector {
+      background-color: #2e3856;
+      color: white;
+      border: 1px solid #4255ff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    #sheetName {
+      font-size: 18px;
+      color: #ffd800;
+    }
+
+    .card-wrapper {
+      width: 650px;
+      height: 320px;
+      perspective: 1000px;
+      margin-bottom: 20px;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      border-radius: 14px;
+      border: 2px solid #4255ff;
+      box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.4);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #2e3856;
+      user-select: none;
+    }
+
+    .flipped {
+      transform: rotateX(180deg);
+    }
+
+    .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 32px 24px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      backface-visibility: hidden;
+      border-radius: 14px;
+      box-sizing: border-box;
+      text-align: center;
+      white-space: pre-line;
+      overflow-wrap: break-word;
+    }
+
+    .back {
+      transform: rotateX(180deg);
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+    }
+
+    .nav-btn {
+      background: #4255ff;
+      border-radius: 10px;
+      border: none;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 3px 8px rgba(66, 85, 255, 0.6);
+    }
+
+    .nav-btn:hover {
+      background: #2a3dcc;
+      box-shadow: 0 5px 12px rgba(42, 61, 204, 0.9);
+    }
+
+    .nav-btn svg {
+      fill: white;
+      width: 24px;
+      height: 24px;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    #counter {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #cccccc;
+    }
+
+    #progressBar {
+      width: 650px;
+      height: 6px;
+      background-color: #444;
+      margin-top: 10px;
+      border-radius: 10px;
+    }
+
+    #progressFill {
+      height: 100%;
+      background-color: #ffd800;
+      width: 0%;
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .buttons button {
+      background-color: #4255ff;
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      user-select: none;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .buttons button:hover {
+      background-color: #3547cc;
+    }
+
+    .buttons button svg {
+      fill: white;
+      width: 18px;
+      height: 18px;
+    }
+
+    /* New styles for the terms list table */
+    #termsContainer {
+      margin-top: 30px;
+      width: 650px;
+      max-height: 300px;
+      overflow-y: auto;
+      border-radius: 8px;
+      border: 1px solid #4255ff;
+      background-color: #2e3856;
+      padding: 16px;
+      box-sizing: border-box;
+      user-select: text;
+    }
+
+    #termsContainer h2 {
+      margin: 0 0 12px 0;
+      font-weight: bold;
+      color: #ffd800;
+      font-size: 20px;
+    }
+
+    #termsTable {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed; /* Equal width columns */
+      border: 1px solid #4255ff;
+      background-color: #2e3856;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    #termsTable th, #termsTable td {
+      border: 1px solid #4255ff;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 14px;
+      width: 33.33%; /* Equal width columns */
+      word-wrap: break-word;
+      white-space: normal; /* allow wrapping */
+      vertical-align: top;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <button class="refresh-btn" onclick="refreshPage()">🔄 Refresh</button>
+	<label class="file-label" for="fileInput">
+      📁 Choose File
+    </label>
+    <input type="file" id="fileInput" accept=".xlsx" />
+    <select id="sheetSelector" style="display:none;"></select>
+    <div id="sheetName"></div>
+  </div>
+
+  <div class="card-wrapper">
+    <div class="flashcard" id="flashcard">
+      <div class="face front" id="frontText">Upload Excel</div>
+      <div class="face back" id="backText">...</div>
+    </div>
+  </div>
+
+  <div class="navigation">
+    <button class="nav-btn" id="prevBtn" aria-label="Previous card">
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="nav-btn" id="nextBtn" aria-label="Next card">
+      <svg viewBox="0 0 24 24">
+        <path d="M9 6l6 6-6 6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div id="counter">00 / 00</div>
+  <div id="progressBar"><div id="progressFill"></div></div>
+
+  <div class="buttons">
+    <button onclick="shuffleCards()">
+      <svg viewBox="0 0 24 24"><path d="M3 16.5l6-6m0 0l6-6M9 10.5h9" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Shuffle
+    </button>
+    <button onclick="resetDeck()">
+      <svg viewBox="0 0 24 24"><path d="M12 2v4m0 12v4m8-8h-4M4 12H0m16.95 5.95l-2.83-2.83M7.88 7.88L5.05 5.05m12.73 0l-2.83 2.83M7.88 16.12L5.05 18.95" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Reset
+    </button>
+    <button onclick="markKnown()">✅ Known</button>
+    <button onclick="markUnknown()">❌ Unknown</button>
+    <button onclick="reviewUnknowns()">🔁 Review Unknown</button>
+    <button onclick="resetReview()">🔄 Reset Review</button>
+  </div>
+
+  <!-- Terms list container -->
+  <div id="termsContainer" style="display:none;">
+    <h2>Terms in this set (<span id="termsCount">0</span>)</h2>
+    <table id="termsTable">
+      <thead>
+        <tr><th>Column 1</th><th>Column 2</th><th>Column 3</th></tr>
+      </thead>
+      <tbody id="termsBody">
+        <!-- dynamically filled -->
+      </tbody>
+    </table>
+  </div>
+
+  <audio id="flipSound" src="https://www.soundjay.com/mechanical/sounds/switch-1.mp3"></audio>
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script>
+  let flashcards = [], originalCards = [], currentCard = 0, flipped = false;
+  let knownCards = new Set(), unknownCards = new Set();
+  let reviewingUnknowns = false, workbookGlobal = null;
+
+  const flashcard = document.getElementById("flashcard");
+  const frontText = document.getElementById("frontText");
+  const backText = document.getElementById("backText");
+  const counter = document.getElementById("counter");
+  const progressFill = document.getElementById("progressFill");
+  const flipSound = document.getElementById("flipSound");
+  const sheetNameDisplay = document.getElementById("sheetName");
+  const sheetSelector = document.getElementById("sheetSelector");
+
+  const termsContainer = document.getElementById("termsContainer");
+  const termsCount = document.getElementById("termsCount");
+  const termsBody = document.getElementById("termsBody");
+
+  document.getElementById("fileInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const data = await file.arrayBuffer();
+      workbookGlobal = XLSX.read(data);
+      const sheetNames = workbookGlobal.SheetNames;
+
+      sheetSelector.innerHTML = "";
+      sheetNames.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        sheetSelector.appendChild(opt);
+      });
+
+      sheetSelector.style.display = "inline-block";
+      sheetSelector.onchange = () => loadSheet(sheetSelector.value);
+      loadSheet(sheetNames[0]);
+
+    } catch (err) {
+      frontText.innerText = "Failed to read file.";
+      backText.innerText = "...";
+      sheetNameDisplay.textContent = "";
+      termsContainer.style.display = "none";
+    }
+  });
+  
+  function refreshPage() {
+	  location.reload();
+	}
+
+  function loadSheet(sheetName) {
+    const sheet = workbookGlobal.Sheets[sheetName];
+    const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    // originalCards is array of {index, data: row array}
+    originalCards = json.slice(1)
+      .map((row, index) => ({ index, data: row }))
+      .filter(card => card.data[0] || card.data[1] || card.data[2]); // At least one column non-empty
+
+    flashcards = [...originalCards];
+    currentCard = 0;
+    knownCards.clear();
+    unknownCards.clear();
+    reviewingUnknowns = false;
+    sheetNameDisplay.textContent = sheetName;
+    showCard();
+    populateTermsTable();
+  }
+
+  function showCard() {
+    if (flashcards.length === 0) {
+      frontText.innerText = "No cards loaded.";
+      backText.innerText = "...";
+      counter.innerText = "00 / 00";
+      progressFill.style.width = "0%";
+      flashcard.style.borderColor = "#4255ff";
+      return;
+    }
+
+    const { data, index } = flashcards[currentCard];
+    const expression = data[0] || '';
+    const definition1 = data[1] || '';
+    const definition2 = data[2] || '';
+	const definition3 = data[3] || '';
+    frontText.innerText = expression;
+    backText.innerText = [definition1, definition2, definition3].filter(Boolean).join('\n');
+
+    flashcard.classList.remove("flipped");
+    flipped = false;
+    updateCounter();
+    flashcard.style.borderColor = knownCards.has(index)
+      ? "#28a745" : unknownCards.has(index) ? "#dc3545" : "#4255ff";
+  }
+
+  function updateCounter() {
+    counter.innerText = `${String(currentCard + 1).padStart(2, '0')} / ${String(flashcards.length).padStart(2, '0')}`;
+    progressFill.style.width = `${((currentCard + 1) / flashcards.length) * 100}%`;
+  }
+
+  flashcard.addEventListener("click", () => {
+    flipped = !flipped;
+    flashcard.classList.toggle("flipped");
+    flipSound.play();
+  });
+
+  document.getElementById("nextBtn").onclick = () => {
+    if (!flashcards.length) return;
+    currentCard = (currentCard + 1) % flashcards.length;
+    showCard();
+  };
+
+  document.getElementById("prevBtn").onclick = () => {
+    if (!flashcards.length) return;
+    currentCard = (currentCard - 1 + flashcards.length) % flashcards.length;
+    showCard();
+  };
+
+  document.onkeydown = (e) => {
+    if (e.key === "ArrowRight") document.getElementById("nextBtn").click();
+    if (e.key === "ArrowLeft") document.getElementById("prevBtn").click();
+    if (e.key === " ") {
+      e.preventDefault();
+      flashcard.click();
+    }
+  };
+
+  function shuffleCards() {
+    if (!flashcards.length) return;
+    flashcards = [...flashcards].sort(() => Math.random() - 0.5);
+    currentCard = 0;
+    showCard();
+  }
+
+  function resetDeck() {
+    if (!originalCards.length) return;
+    flashcards = [...originalCards];
+    currentCard = 0;
+    knownCards.clear();
+    unknownCards.clear();
+    reviewingUnknowns = false;
+    showCard();
+  }
+
+  function markKnown() {
+    if (!flashcards.length) return;
+    const { index } = flashcards[currentCard];
+    knownCards.add(index);
+    unknownCards.delete(index);
+    showCard();
+  }
+
+  function markUnknown() {
+    if (!flashcards.length) return;
+    const { index } = flashcards[currentCard];
+    unknownCards.add(index);
+    knownCards.delete(index);
+    showCard();
+  }
+
+  function reviewUnknowns() {
+    if (!unknownCards.size) return;
+    flashcards = originalCards.filter(card => unknownCards.has(card.index));
+    currentCard = 0;
+    reviewingUnknowns = true;
+    showCard();
+  }
+
+  function resetReview() {
+    if (!reviewingUnknowns) return;
+    flashcards = [...originalCards];
+    currentCard = 0;
+    reviewingUnknowns = false;
+    showCard();
+  }
+
+  // Populate the terms table below buttons
+  function populateTermsTable() {
+    if (!originalCards.length) {
+      termsContainer.style.display = "none";
+      return;
+    }
+    termsCount.textContent = originalCards.length;
+    termsBody.innerHTML = "";
+
+    originalCards.forEach(({ data }) => {
+      const tr = document.createElement("tr");
+      // We always want 3 columns, even if data missing, so fallback to empty string
+      const col1 = data[0] || "";
+      const col2 = data[1] || "";
+      const col3 = data[2] || "";
+      tr.innerHTML = `
+					  <td>${escapeHtml(col1)}</td>
+					  <td>${escapeHtml(col2)}</td>
+					  <td>${escapeHtml(col3)}</td>`;
+      termsBody.appendChild(tr);
+    });
+
+    termsContainer.style.display = "block";
+  }
+
+  // Simple HTML escape to prevent issues if content contains html special chars
+  function escapeHtml(text) {
+    return text.replace(/[&<>"']/g, (m) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[m]);
+  }
+  </script>
+
+</body>
+</html>

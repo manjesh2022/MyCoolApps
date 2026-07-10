@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Homepage</title>
+  <link rel="icon" href="0favicon/homepage.png" type="image/png" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #1e2a38; /* Dark blue/gray background */
+      color: #ffffff;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px;
+      color: #ffffff;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .grid-item {
+      background-color: #2f3e4e;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      padding: 50px;
+      text-align: center;
+      font-size: 20px;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+    }
+
+    .grid-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+      background-color: #3a4d63;
+    }
+
+    .grid-item a {
+      text-decoration: none;
+      color: #76c9ff;
+      font-weight: bold;
+    }
+
+    .grid-item a:hover {
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Homepage</h1>
+
+  <div class="grid-container">
+    <div class="grid-item"><a href="01_qlet.html">QLet</a></div>
+    <div class="grid-item"><a href="02_blr.html">BLR</a></div>
+    <div class="grid-item"><a href="03_bill.html">Bill</a></div>
+    <div class="grid-item"><a href="04_spinwheel.html">SpinWheel</a></div>
+    <div class="grid-item"><a href="one.html">One</a></div>
+    <div class="grid-item"><a href="05_calci.html">Calci</a></div>
+    <div class="grid-item"><a href="06_qr.html">QR Code</a></div>
+    <div class="grid-item"><a href="07_ppt.html">PPT</a></div>
+    <div class="grid-item"><a href="08_jlpt.html">JLPT</a></div>
+    <div class="grid-item"><a href="#">ComingSoon</a></div>
+    <div class="grid-item"><a href="#">ComingSoon</a></div>
+    <div class="grid-item"><a href="#">ComingSoon</a></div>
+  </div>
+
+</body>
+</html>

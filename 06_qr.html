@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QRC</title>
+  <link rel="icon" href="0favicon/qr.png" type="image/png" />
+  <style>
+    :root {
+      --bg: #121212;
+      --surface: #1e1e1e;
+      --text: #ffffff;
+      --placeholder: #888;
+      --primary: #0d6efd;
+      --primary-hover: #0a58ca;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      background-color: var(--surface);
+      padding: 15px 0;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    header a {
+      text-decoration: none;
+      color: #fff;
+      background-color: var(--primary);
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    header a:hover {
+      background-color: var(--primary-hover);
+    }
+
+    main {
+      flex: 1;
+      padding: 40px 20px;
+      text-align: center;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 600px;
+      padding: 14px;
+      font-size: 18px;
+      background-color: var(--surface);
+      color: var(--text);
+      border: 2px solid #2e2e2e;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+
+    input::placeholder {
+      color: var(--placeholder);
+    }
+
+    #qr-code {
+      margin-top: 30px;
+    }
+
+    #qr-code img {
+      border-radius: 2px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 22px;
+      }
+
+      input[type="text"] {
+        font-size: 16px;
+        padding: 12px;
+      }
+
+      header a {
+        font-size: 13px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="https://goqr.me/" target="_blank">GoQR.me</a>
+    <a href="https://www.qrcode-monkey.com/" target="_blank">QR Code Monkey</a>
+  </header>
+
+  <main>
+    <h1>🖤 Generate Your QR Code Instantly</h1>
+    <input type="text" id="text-input" placeholder="Enter a URL or text...">
+    <div id="qr-code"></div>
+  </main>
+
+  <script>
+    const input = document.getElementById("text-input");
+    const qrCodeDiv = document.getElementById("qr-code");
+
+    function updateQRCode(text) {
+      if (text.trim() === "") {
+        qrCodeDiv.innerHTML = "";
+        return;
+      }
+      const qrURL = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(text)}&size=200x200`;
+      qrCodeDiv.innerHTML = `<img src="${qrURL}" alt="QR Code">`;
+    }
+
+    input.addEventListener("input", () => {
+      updateQRCode(input.value);
+    });
+  </script>
+
+</body>
+</html>

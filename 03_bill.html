@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <title>Bill</title>
+  <link rel="icon" href="0favicon/bill.png" type="image/png" />
+  <style>
+   body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+   }
+   .left,
+   .right {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+   }
+   .left {
+    background: #0a092d;
+    border-right: 1px solid #ccc;
+   }
+   .right {
+    background: #fff;
+    color: #000;
+    max-width: 320px;
+    margin: 0 auto;
+    font-size: 12px;
+    display: block;
+   }
+   h2,
+   .center {
+    text-align: center;
+    color: black;
+   }
+   input,
+   select,
+   button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 6px; /* 👈 your curved edges */
+    font-size: 14px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+   }
+   input:focus,
+   select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+    outline: none;
+   }
+   button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+   }
+   .product-row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+   }
+   .product-row input[type="text"],
+   .product-row input[type="number"] {
+    flex: 1;
+    font-size: 14px;
+    padding: 8px;
+    height: 32px;
+   }
+   .product-row button {
+    padding: 2px;
+    width: 26px;
+    height: 26px;
+    background: #dc3545;
+    color: white;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   }
+   .btn,
+   .grid-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin: 5px 2px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+   }
+   #addBtn {
+    font-size: 16px;
+    padding: 10px;
+   }
+   .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 5px;
+    margin-bottom: 10px;
+   }
+   .grid-btn.active {
+    background: #28a745;
+   }
+   .invoice {
+    background: #fff;
+    padding: 10px;
+   }
+   table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+   }
+   th,
+   td {
+    border-bottom: 1px dashed #aaa;
+    padding: 4px;
+    text-align: center;
+   }
+   .total {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 5px;
+   }
+   .barcode,
+   .qr {
+    text-align: center;
+    margin-top: 10px;
+   }
+   .section {
+    margin-top: 10px;
+    margin-bottom: 10px;
+   }
+   @media print {
+    body {
+     display: block;
+    }
+    .left {
+     display: none;
+    }
+    .right {
+     display: block !important;
+     max-width: none;
+     width: 100%;
+    }
+    .btn {
+     display: none;
+    }
+    input {
+     border: none;
+     background: none;
+    }
+   }
+   .input-card {
+    background: #d3d3d3;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+   }
+   .input-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+   }
+   .white-heading {
+    color: white;
+   }
+   @media print {
+    .invoice {
+     page-break-inside: avoid;
+    }
+   }
+   .three-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    margin-top: 10px;
+   }
+
+   .three-buttons .btn {
+    flex: 1;
+   }
+
+  </style>
+ </head>
+ <body onload="initInvoice()">
+  <div class="left">
+   <h2 class="white-heading">Billing Entry</h2>
+   <div class="input-card">
+    <h3>🧍 Customer Details</h3>
+    <label>Customer Name</label>
+    <input type="text" id="custName" oninput="updatePreview()" />
+    <label>Phone Number</label>
+    <input type="text" id="custPhone" oninput="updatePreview()" />
+   </div>
+   <div class="input-card">
+    <h3>📦 Products</h3>
+    <div id="productInputs"></div>
+    <button id="addBtn" class="btn" onclick="addProductInput()">➕ Add Product</button>
+   </div>
+   <div class="input-card">
+    <h3>🧾 Select Carry Bag</h3>
+    <div class="grid" id="carryGrid">
+     <button class="grid-btn" onclick="selectCarryBag(this, 'S', 10)">Small ₹10</button>
+     <button class="grid-btn" onclick="selectCarryBag(this, 'M', 20)">Medium ₹20</button>
+     <button class="grid-btn" onclick="selectCarryBag(this, 'B', 30)">Big ₹30</button>
+     <button class="grid-btn" onclick="selectCarryBag(this, '', 0)">None</button>
+    </div>
+    <div id="carryQtyWrapper" style="display: none; margin-top: 10px;">
+     <label>Quantity of Bags</label>
+     <input type="number" id="carryQty" value="1" min="1" oninput="updatePreview()" placeholder="Quantity of Bags" />
+    </div>
+   </div>
+   <div class="input-card">
+    <h3>🏷️ Apply Coupon</h3>
+    <div class="grid" id="couponGrid">
+     <button class="grid-btn" onclick="applyCoupon(this, 'SAVE10')">SAVE10</button>
+     <button class="grid-btn" onclick="applyCoupon(this, 'SAVE20')">SAVE20</button>
+     <button class="grid-btn" onclick="clearCoupon()">❌ Clear</button>
+    </div>
+    <input type="text" id="coupon" placeholder="Enter Coupon" oninput="updatePreview()" />
+   </div>
+   <div class="input-card">
+    <h3>💰 Payment Mode</h3>
+    <div class="grid" id="paymentGrid">
+     <button class="grid-btn" onclick="selectPayment(this, 'UPI')">🧾 UPI</button>
+     <button class="grid-btn" onclick="selectPayment(this, 'Cash')">💵 Cash</button>
+     <button class="grid-btn" onclick="selectPayment(this, 'Card')">💳 Card</button>
+    </div>
+    <div class="qr">
+     <img id="qrCode" src="" alt="UPI QR" />
+    </div>
+	<div id="cashDetails" style="display: none; margin-top: 10px;">
+     <label>Cash Collected</label>
+     <input type="number" id="cashCollected" placeholder="" step="1" min="1" oninput="validateCashInput(); calculateChange()" />
+     <label>Change to Return</label>
+     <input type="text" id="cashReturn" readonly value="0.00" />
+    </div>
+   </div>
+   <div class="input-card">  
+    <h3>⚙️ Invoice Tools</h3>  
+    <div class="three-buttons">
+     <button id="resetBtn" class="btn" onclick="resetInvoice()">🔄 New Invoice</button>
+     <button class="btn" onclick="exportPDF()">🖨️ Print Bill</button>
+     <button id="toggleBtn" class="btn" onclick="toggleBill()">🙈 Hide Bill</button>
+    </div>
+   </div>
+  </div>
+  <div class="right">
+   <div class="invoice">
+    <h2>🛍️ MyConbini</h2>
+    <div class="center">
+     Chuo, KasukabeShi, SaitamaKen<br />
+     Tokyo Japan 344-8577<br />
+     +81 902345678
+    </div>
+    <div class="section">
+     <strong>Invoice No:</strong> <span id="invoiceNo">-</span><br />
+     <strong>Date:</strong> <span id="invoiceDate">-</span>
+    </div>
+    <div class="section">
+     <strong>Customer:</strong> <span id="previewCust">---</span><br />
+     <strong>Phone:</strong> <span id="previewPhone">---</span>
+    </div>
+    <table id="productTable">
+     <thead>
+      <tr>
+       <th>Item</th>
+       <th>Qty</th>
+       <th>Rate</th>
+       <th>GST%</th>
+       <th>Total</th>
+      </tr>
+     </thead>
+     <tbody id="previewBody"></tbody>
+    </table>
+    <div class="total">Subtotal: ₹ <span id="subtotal">0.00</span></div>
+    <div class="total"><small id="discountNote" style="color: green; font-weight: bold;"></small>Discount: ₹ <span id="discount">0.00</span></div>
+    <div class="total">Grand Total: ₹ <span id="grandTotal">0.00</span></div>
+    <div class="section"><strong>Payment Mode:</strong> <span id="previewPay">UPI</span></div>
+    <div class="section center">🙏 Thank you for shopping at MyConbini!</div>
+    <div class="barcode">
+     <svg id="barcode"></svg>
+    </div>
+   </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script>
+   let selectedCoupon = "";
+   let selectedPayment = "UPI";
+   let carryBagType = "";
+   let carryBagCost = 0;
+
+   function initInvoice() {
+    const now = new Date();
+	const formattedDate = now.getDate().toString().padStart(2, '0') + '/' +
+						  (now.getMonth() + 1).toString().padStart(2, '0') + '/' +
+						  now.getFullYear();
+	document.getElementById("invoiceDate").textContent = formattedDate;
+
+    const invoiceId = "INV-" + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById("invoiceNo").textContent = invoiceId;
+    JsBarcode("#barcode", invoiceId, {
+     format: "CODE128",
+     lineColor: "#000",
+     width: 2,
+     height: 40,
+     displayValue: true,
+     background: "#fff",
+    });
+    addProductInput();
+    updatePreview();
+   }
+
+   function addProductInput() {
+    const container = document.getElementById("productInputs");
+    const div = document.createElement("div");
+    div.className = "product-row";
+    div.innerHTML = `
+             <input type="text" placeholder="Item" oninput="updatePreview(); checkAddButton()" />
+             <input type="number" placeholder="Qty" value="1" min="1" oninput="updatePreview()" />
+             <input type="number" placeholder="Total" value="" min="0" oninput="updatePreview()" />
+             <input type="number" placeholder="GST%" value="3" readonly />
+             <button onclick="removeProductInput(this)">🗑️</button>
+           `;
+    container.appendChild(div);
+    checkAddButton();
+   }
+
+   function removeProductInput(btn) {
+    btn.parentElement.remove();
+    checkAddButton();
+    updatePreview();
+   }
+
+   function checkAddButton() {
+    const productRows = document.querySelectorAll("#productInputs .product-row");
+    const addBtn = document.getElementById("addBtn");
+    if (productRows.length === 0) {
+     addBtn.disabled = false;
+     return;
+    }
+    const lastRow = productRows[productRows.length - 1];
+    const itemInput = lastRow.querySelector('input[type="text"]');
+    addBtn.disabled = !(itemInput && itemInput.value.trim().length > 0);
+   }
+
+   function updatePreview() {
+	  document.getElementById("previewCust").textContent = document.getElementById("custName").value || "---";
+	  document.getElementById("previewPhone").textContent = document.getElementById("custPhone").value || "---";
+	  document.getElementById("previewPay").textContent = selectedPayment;
+
+	  const tbody = document.getElementById("previewBody");
+	  tbody.innerHTML = "";
+	  let subtotal = 0;
+
+	  document.querySelectorAll("#productInputs .product-row").forEach((row) => {
+		const inputs = row.querySelectorAll("input");
+		const item = inputs[0].value.trim();
+		const qty = Math.max(1, parseFloat(inputs[1].value) || 1);
+		const totalAmount = Math.max(0, parseFloat(inputs[2].value) || 0);
+		const gst = 3;
+		const base = totalAmount / (1 + gst / 100);
+		const rate = qty ? base / qty : 0;
+
+		subtotal += totalAmount;
+
+		if (item) {
+		  const tr = document.createElement("tr");
+		  tr.innerHTML = `<td>${item}</td><td>${qty}</td><td>${rate.toFixed(2)}</td><td>${gst}</td><td>${totalAmount.toFixed(2)}</td>`;
+		  tbody.appendChild(tr);
+		}
+	  });
+
+	  const carryQty = parseInt(document.getElementById("carryQty").value) || 1;
+	  const carryTotal = carryBagCost * carryQty;
+
+	  if (carryBagType && carryBagCost > 0) {
+		subtotal += carryTotal;
+		const tr = document.createElement("tr");
+		tr.innerHTML = `<td>Carry Bag (${carryBagType})</td><td>${carryQty}</td><td>${carryBagCost.toFixed(2)}</td><td>0</td><td>${carryTotal.toFixed(2)}</td>`;
+		tbody.appendChild(tr);
+	  }
+
+	  let discount = 0;
+	  const code = selectedCoupon || document.getElementById("coupon").value.trim().toUpperCase();
+
+	  if (code === "SAVE10" && subtotal > 500) discount = subtotal * 0.1;
+	  else if (code === "SAVE20" && subtotal > 1000) discount = subtotal * 0.2;
+
+	  discount = Math.ceil(discount);
+	  const grandTotal = subtotal - discount;
+
+	  document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+	  document.getElementById("discount").textContent = discount.toFixed(2);
+	  const discountNote = document.getElementById("discountNote");
+	  discountNote.textContent = discount > 0 ? `(${code})` : "";
+
+	  document.getElementById("discount").style.color = discount > 0 ? "green" : "inherit";
+	  document.getElementById("grandTotal").textContent = grandTotal.toFixed(2);
+
+	  checkAddButton();
+
+	  // Show/hide QR code based on payment mode
+	  const qrImage = document.getElementById("qrCode");
+	  const qrContainer = qrImage.parentElement;
+
+	  if (selectedPayment === "UPI") {
+		const payeeAddress = "manjesh.mariswamy-1@okaxis";
+		const customerName = document.getElementById("custName").value.trim() || "Customer";
+		const grandAmount = grandTotal.toFixed(2);
+
+		const upiURL = `upi://pay?pa=${payeeAddress}&pn=MyConbini&am=${grandAmount}&cu=INR&tn=MyConbini_${encodeURIComponent(customerName)}`;
+		const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(upiURL)}`;
+
+		qrImage.src = qrURL;
+		qrContainer.style.display = "block";
+	  } else {
+		qrContainer.style.display = "none";
+	  }
+
+	  if (selectedPayment === "Cash") calculateChange();
+	}
+
+
+   document.getElementById("custPhone").addEventListener("input", function () {
+    this.value = this.value.replace(/[^0-9]/g, "").slice(0, 10);
+   });
+
+   function selectPayment(button, value) {
+    selectedPayment = value;
+    document.querySelectorAll("#paymentGrid .grid-btn").forEach((btn) => btn.classList.remove("active"));
+    button.classList.add("active");
+    updatePreview();
+
+    const cashDetails = document.getElementById("cashDetails");
+    if (value === "Cash") {
+     cashDetails.style.display = "block";
+    } else {
+     cashDetails.style.display = "none";
+     document.getElementById("cashCollected").value = "";
+     document.getElementById("cashReturn").value = "0.00";
+    }
+   }
+
+   function applyCoupon(button, code) {
+    selectedCoupon = code;
+    document.getElementById("coupon").value = code;
+    document.querySelectorAll("#couponGrid .grid-btn").forEach((btn) => btn.classList.remove("active"));
+    button.classList.add("active");
+    updatePreview();
+   }
+
+   function selectCarryBag(button, type, cost) {
+    carryBagType = type;
+    carryBagCost = cost;
+
+    // Update button active state
+    document.querySelectorAll("#carryGrid .grid-btn").forEach((btn) => btn.classList.remove("active"));
+    button.classList.add("active");
+
+    const qtyWrapper = document.getElementById("carryQtyWrapper");
+
+    if (cost > 0) {
+     qtyWrapper.style.display = "block";
+    } else {
+     qtyWrapper.style.display = "none";
+     document.getElementById("carryQty").value = 1; // Reset to default
+    }
+
+    updatePreview();
+   }
+
+   function toggleBill() {
+    const rightSection = document.querySelector(".right");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const isVisible = getComputedStyle(rightSection).display !== "none";
+    rightSection.style.display = isVisible ? "none" : "block";
+    toggleBtn.textContent = isVisible ? "👁️ View Bill" : "🙈 Hide Bill";
+   }
+
+   function calculateChange() {
+    const collected = parseInt(document.getElementById("cashCollected").value) || 0;
+    const total = Math.ceil(parseFloat(document.getElementById("grandTotal").textContent) || 0);
+    const change = collected - total;
+
+    document.getElementById("cashReturn").value = change >= 0 ? change : 0;
+   }
+
+   function validateCashInput() {
+    const input = document.getElementById("cashCollected");
+    if (parseInt(input.value) < 1 || isNaN(parseInt(input.value))) {
+     input.value = "";
+     document.getElementById("cashReturn").value = 0;
+    }
+   }
+
+   function clearCoupon() {
+    selectedCoupon = "";
+    document.getElementById("coupon").value = "";
+    document.querySelectorAll("#couponGrid .grid-btn").forEach((btn) => btn.classList.remove("active"));
+    updatePreview();
+   }
+
+   function exportPDF() {
+    const invoiceElement = document.querySelector(".right");
+
+    // Get and sanitize customer name
+    let name = document.getElementById("custName").value.trim().toUpperCase();
+    name = name.replace(/[^A-Z0-9]/g, "").slice(0, 4) || "CUST"; // Max 4 chars
+
+    // Get invoice number
+    const invoiceNo = document.getElementById("invoiceNo").textContent.replace(/[^A-Z0-9\-]/g, "");
+
+    // Combine for filename
+    const filename = `${name}_${invoiceNo}.pdf`;
+
+    const options = {
+     margin: [10, 10, 10, 10],
+     filename: filename,
+     image: { type: "jpeg", quality: 0.98 },
+     html2canvas: { scale: 2 },
+     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
+
+    html2pdf().set(options).from(invoiceElement).save();
+   }
+
+   function resetInvoice() {
+    if (!confirm("Are you sure you want to clear this invoice?")) return;
+
+    // Clear customer inputs
+    document.getElementById("custName").value = "";
+    document.getElementById("custPhone").value = "";
+
+    // Clear products
+    document.getElementById("productInputs").innerHTML = "";
+    addProductInput();
+
+    // Reset carry bag
+    carryBagType = "";
+    carryBagCost = 0;
+    document.getElementById("carryQty").value = 1;
+    document.getElementById("carryQtyWrapper").style.display = "none";
+    document.querySelectorAll("#carryGrid .grid-btn").forEach((btn) => btn.classList.remove("active"));
+
+    // Reset coupon
+    selectedCoupon = "";
+    document.getElementById("coupon").value = "";
+    document.querySelectorAll("#couponGrid .grid-btn").forEach((btn) => btn.classList.remove("active"));
+
+    // Reset payment
+    selectedPayment = "UPI";
+    document.querySelectorAll("#paymentGrid .grid-btn").forEach((btn) => btn.classList.remove("active"));
+    document.querySelector("#paymentGrid .grid-btn:nth-child(1)").classList.add("active"); // Select UPI
+    document.getElementById("cashDetails").style.display = "none";
+    document.getElementById("cashCollected").value = "";
+    document.getElementById("cashReturn").value = "0.00";
+
+    // Generate new invoice number
+    const invoiceId = "INV-" + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById("invoiceNo").textContent = invoiceId;
+    JsBarcode("#barcode", invoiceId, {
+     format: "CODE128",
+     lineColor: "#000",
+     width: 2,
+     height: 40,
+     displayValue: true,
+     background: "#fff",
+    });
+
+    updatePreview();
+   }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+ </body>
+</html>

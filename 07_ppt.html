@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanji Cards Pro - Multi-Sheet</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #282828;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    user-select: none;
+  }
+
+  .main {
+    text-align: center;
+    width: 100%;
+    max-width: 1020px; /* Increased to allow a larger card layout footprint */
+    padding: 20px;
+  }
+
+  .header-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+  }
+
+  /* Compact header upload button */
+  .upload-btn {
+    background: #444;
+    color: white;
+    padding: 8px 16px; /* Decreased size */
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+    font-size: 13px; /* Decreased size */
+    border: 2px solid transparent;
+  }
+  .upload-btn:hover { background: #222; border-color: #4255ff; }
+  .upload-btn input { display: none; }
+
+  /* Compact sheet selector dropdown */
+  #sheet-selector {
+    padding: 8px 16px; /* Decreased size */
+    border-radius: 50px;
+    background: #4255ff;
+    color: white;
+    border: none;
+    font-weight: bold;
+    font-size: 13px; /* Decreased size */
+    cursor: pointer;
+    outline: none;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  /* MASTER CARD STYLING - Increased Scale */
+  .card {
+    background: #F4C8CA;
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    width: 960px;  /* Increased size horizontally */
+    height: 480px; /* Increased size vertically to match proportions */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px; /* Enhanced separation gap */
+    cursor: pointer;
+    position: relative;
+    margin: 0 auto;
+    transition: transform 0.2s ease;
+    box-sizing: border-box;
+  }
+  .card:hover { transform: translateY(-5px); }
+
+  /* LEFT HAND COLUMN: STRUCTURAL DATA */
+  .left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    height: 100%;
+  }
+
+  .kanji-meaning-row {
+    display: flex;
+    gap: 30px; 
+    height: 180px; 
+  }
+
+  .kanji-box {
+    width: 180px; 
+    height: 180px; 
+    border: 4px solid #333;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px; 
+    font-weight: bold;
+    background: #fff;
+    flex-shrink: 0;
+  }
+
+  .meaning-box {
+    width: 180px; 
+    height: 180px; 
+    border: 2px solid #eee;
+    background: #fafafa;
+    border-radius: 20px;
+    padding: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  .meaning-text {
+    font-size: 22px; 
+    color: #111;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 8px;
+  }
+
+  .reading-box {
+    border: 2px solid #eee;
+    background: #fafafa;
+    border-radius: 15px;
+    padding: 14px;
+    text-align: left;
+    height: 85px; /* Sized proportionately up to fill card */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  .reading-title {
+    font-size: 11px;
+    color: #4169E1;
+    font-weight: bold;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+
+  .reading-text { font-size: 21px; color: #111; font-weight: 500; }
+
+  /* RIGHT HAND COLUMN: EXAMPLES VERTICAL STACK */
+  .right-panel-examples {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; 
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  .example {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 12px;
+    background: #efefef;
+    text-align: left; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 88px; /* Sized proportionately up to fill card */
+    box-sizing: border-box;
+  }
+
+  .jp { font-size: 24px; font-weight: 500; margin-bottom: 4px; }
+  .eng { font-size: 18px; color: #e63946; height: 20px; font-weight: bold; }
+
+  /* ANIMATION SYSTEM */
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-block;
+  }
+  .reveal-item.visible { opacity: 1; transform: translateY(0); }
+  .no-anim { transition: none !important; }
+
+  /* NAVIGATION CONTROLS - Decreased Sizing */
+  .nav {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #page-counter {
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 18px; /* Decreased size */
+    width: 100px;
+    text-align: center;
+  }
+
+  button {
+    padding: 8px 16px; /* Decreased padding size */
+    font-size: 13px; /* Decreased text size */
+    border: none;
+    background: #4255ff;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 150px; /* Narrowed width constraint */
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+    outline: none;
+  }
+  button:hover { transform: translateY(-2px); opacity: 0.95; }
+  button:active { transform: translateY(0); }
+  button:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; }
+
+  .save-all-btn { width: 110px; background: #27ae60; }
+
+</style>
+</head>
+
+<body>
+
+<div class="main">
+  <div class="header-controls">
+    <label class="upload-btn">
+      <span id="btn-label-text">📂 Upload Excel File</span>
+      <input type="file" id="upload" accept=".xlsx, .xls">
+    </label>
+
+    <select id="sheet-selector" onchange="switchSheet(this.value)"></select>
+  </div>
+
+  <div id="card-container" onclick="saveCurrentCard()">
+    <div class="card" style="display: block; text-align: center;">
+      <div style="color: #888; margin-top: 180px; font-weight: bold;">Upload your N2 Excel to begin.</div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button id="mode-btn" onclick="toggleNormalView()">🧠 Study Mode</button>
+    <button onclick="prev()">⬅ Back</button>
+    <div id="page-counter">00 / 00</div>
+    <button onclick="next()">Next ➡</button>
+    <button id="save-all-btn" class="save-all-btn" onclick="saveAllCards()" disabled>📥 Save All</button>
+  </div>
+</div>
+
+<script>
+let data = [];
+let index = 0;
+let step = 0;
+let isNormalView = false;
+let workbook = null;
+
+document.getElementById("upload").addEventListener("change", handleFile);
+
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  document.getElementById("btn-label-text").innerText = `📄 ${file.name}`;
+  
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    workbook = XLSX.read(evt.target.result, { type: 'binary' });
+    
+    const selector = document.getElementById("sheet-selector");
+    selector.innerHTML = "";
+    workbook.SheetNames.forEach(name => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.innerHTML = name;
+      selector.appendChild(opt);
+    });
+    
+    selector.style.display = "block";
+    switchSheet(workbook.SheetNames[0]);
+  };
+  reader.readAsBinaryString(file);
+}
+
+function switchSheet(sheetName) {
+  const sheet = workbook.Sheets[sheetName];
+  const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" });
+  
+  data = json.slice(1).filter(row => row[0]).map(row => ({
+    kanji: row[0],
+    kanjiMeaning: row[1],
+    onyomi: row[2],
+    kunyomi: row[3],
+    examples: [row[4], row[5], row[6], row[7]]
+  }));
+  
+  index = 0;
+  step = 0;
+  document.getElementById("save-all-btn").disabled = false;
+  render();
+}
+
+function toggleNormalView() {
+  isNormalView = !isNormalView;
+  const btn = document.getElementById("mode-btn");
+  btn.innerText = isNormalView ? "👁️ Normal Mode" : "🧠 Study Mode";
+  if (!isNormalView) step = 0;
+  render();
+}
+
+function parseExampleText(ex) {
+  let k = "", h = "", e = "";
+  if (ex.includes("(")) {
+    const parts = ex.split(":");
+    e = (parts[1] || "").trim();
+    k = parts[0].split("(")[0].trim();
+    h = parts[0].split("(")[1]?.replace(")", "").trim() || "";
+  } else {
+    k = ex.trim();
+  }
+  return { k, h, e };
+}
+
+function render(forceFull = false) {
+  if (!data.length) return;
+
+  const d = data[index];
+  const activeStep = (isNormalView || forceFull) ? 12 : step;
+  const animClass = (isNormalView || forceFull) ? "no-anim" : "";
+
+  document.getElementById("page-counter").innerText =
+    `${String(index + 1).padStart(2, '0')} / ${String(data.length).padStart(2, '0')}`;
+
+  const getCls = (s) => `reveal-item ${activeStep >= s ? 'visible' : ''} ${animClass}`;
+
+  let examplesHTML = [0, 1, 2, 3].map(i => {
+    const { k, h, e } = parseExampleText(d.examples[i] || "");
+    const hiraStep = 5 + (i * 2);
+    const engStep = 6 + (i * 2);
+
+    return `<div class="example">
+      <div class="jp">
+        <span class="${getCls(1)}">${k}</span>
+        <span style="color:#4169E1" class="${getCls(hiraStep)}">${h ? ` (${h})` : ""}</span>
+      </div>
+      <div class="eng ${getCls(engStep)}">${e}</div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("card-container").innerHTML = `
+  <div class="card" id="kanji-card-element">
+    
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="kanji-meaning-row">
+        <div class="meaning-box">
+          <div class="meaning-text ${getCls(2)}">${d.kanjiMeaning || "—"}</div>
+        </div>
+        <div class="kanji-box">
+          <span class="${getCls(1)}">${d.kanji}</span>
+        </div>
+      </div>
+
+      <div class="reading-box">
+        <div class="reading-title">Kunyomi (Japanese)</div>
+        <div class="reading-text ${getCls(3)}">${d.kunyomi || "—"}</div>
+      </div>
+
+      <div class="reading-box">
+        <div class="reading-title">Onyomi (Chinese)</div>
+        <div class="reading-text ${getCls(4)}">${d.onyomi || "—"}</div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel-examples">
+      ${examplesHTML}
+    </div>
+
+  </div>`;
+}
+
+function saveCurrentCard() {
+  const cardElement = document.getElementById("kanji-card-element");
+  if (!cardElement || !data.length) return;
+  html2canvas(cardElement, { scale: 2, backgroundColor: '#F4C8CA' }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `N2_Card_${data[index].kanji}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+}
+
+async function saveAllCards() {
+  if (!data.length) return;
+  const btn = document.getElementById("save-all-btn");
+  const originalIndex = index;
+  btn.disabled = true;
+
+  for (let i = 0; i < data.length; i++) {
+    index = i;
+    btn.innerText = `⏳ ${i + 1}/${data.length}`;
+    render(true);
+    await new Promise(r => setTimeout(r, 250));
+    const canvas = await html2canvas(document.getElementById("kanji-card-element"), {
+      scale: 2,
+      backgroundColor: '#F4C8CA'
+    });
+    const link = document.createElement('a');
+    link.download = `N2_Export_${i + 1}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+  }
+
+  index = originalIndex;
+  render();
+  btn.innerText = "📥 Save All";
+  btn.disabled = false;
+}
+
+function next() {
+  if (!data.length) return;
+  if (isNormalView) {
+    index = (index + 1) % data.length;
+  } else {
+    if (step >= 12) {
+      index = (index + 1) % data.length;
+      step = 0;
+    } else {
+      step++;
+    }
+  }
+  render();
+}
+
+function prev() {
+  if (!data.length) return;
+  if (isNormalView) {
+    index = (index - 1 + data.length) % data.length;
+  } else {
+    if (step <= 0) {
+      index = (index - 1 + data.length) % data.length;
+      step = 12;
+    } else {
+      step--;
+    }
+  }
+  render();
+}
+
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") {
+    e.preventDefault();
+    next();
+  }
+  if (e.key === "ArrowRight") next();
+  if (e.key === "ArrowLeft") prev();
+});
+</script>
+</body>
+</html>

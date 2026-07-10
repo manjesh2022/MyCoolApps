@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bangalore</title>
+    <link rel="icon" href="0favicon/blr.png" type="image/png" />
+    <style>
+        body {
+            background-color: #2b2b2b;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2b2b2b;
+            text-align: center;
+            color: #ff7e8f;
+            position: fixed;
+            width: 100%;
+			z-index: 1001;
+        }
+
+        header p {
+            color: #ff7e8f;
+        }
+
+        footer {
+            background-color: #2b2b2b;
+            padding: 10px 0;
+            text-align: center;
+            color: #ff7e8f;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .places-grid {
+			display: grid;
+			grid-template-columns: repeat(5, 1fr);
+			gap: 20px;
+			padding: 130px 30px 100px;
+			justify-items: center;
+		}
+
+		.place-box {
+			background: linear-gradient(145deg, #ffb6c1, #ff7e8f);
+			color: #2b2b2b;
+			padding: 20px;
+			border-radius: 15px;
+			text-align: center;
+			font-weight: bold;
+			text-decoration: none;
+			transition: transform 0.25s ease, box-shadow 0.25s ease;
+			width: 100%;
+			max-width: 220px;
+			height: 50px; /* FIXED height */
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+			position: relative;
+			overflow: hidden; /* prevents text overflow */
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.place-box::before {
+			font-size: 28px;
+			display: block;
+			margin-bottom: 10px;
+			transition: transform 0.3s ease;
+		}
+
+		.place-box:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+		}
+
+		.place-box:hover::before {
+			transform: scale(1.2) rotate(5deg);
+		}
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Explore Bangalore: Discover the beauty of the Garden City</h1>
+    </header>
+
+    <section class="places-grid">
+        <a class="place-box" href="https://www.google.com/maps?q=Cubbon+Park,+Bangalore" target="_blank">Cubbon Park</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Lalbagh+Botanical+Garden,+Bangalore" target="_blank">Lalbagh Garden</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Bangalore+Palace" target="_blank">Bangalore Palace</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Vidhana+Soudha,+Bangalore" target="_blank">Vidhana Soudha</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Tipu+Sultan's+Summer+Palace,+Bangalore" target="_blank">Tipu Sultan's Palace</a>
+        <a class="place-box" href="https://www.google.com/maps?q=ISKCON+Temple+Bangalore" target="_blank">ISKCON Temple</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Bull+Temple,+Bangalore" target="_blank">Bull Temple</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Ulsoor+Lake,+Bangalore" target="_blank">Ulsoor Lake</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Wonderla+Amusement+Park,+Bangalore" target="_blank">Wonderla Park</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Bannerghatta+National+Park,+Bangalore" target="_blank">Bannerghatta Park✅</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Nandi+Hills,+Bangalore" target="_blank">Nandi Hills</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Art+of+Living+International+Center,+Bangalore" target="_blank">Art of Living✅</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Jawaharlal+Nehru+Planetarium,+Bangalore" target="_blank">Planetarium</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Visvesvaraya+Museum,+Bangalore" target="_blank">Visvesvaraya Museum</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Commercial+Street,+Bangalore" target="_blank">Commercial Street</a>
+        <a class="place-box" href="https://www.google.com/maps?q=MG+Road,+Bangalore" target="_blank">MG Road</a>
+        <a class="place-box" href="https://www.google.com/maps?q=UB+City+Mall,+Bangalore" target="_blank">UB City Mall</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Phoenix+Marketcity,+Bangalore" target="_blank">Phoenix Marketcity</a>
+        <a class="place-box" href="https://www.google.com/maps?q=St.+Mary's+Basilica,+Bangalore" target="_blank">St. Mary's Basilica</a>
+        <a class="place-box" href="https://www.google.com/maps?q=St.+Patrick's+Church,+Bangalore" target="_blank">St. Patrick's Church</a>
+        <a class="place-box" href="https://www.google.com/maps?q=NGMA,+Bangalore" target="_blank">NGMA</a>
+        <a class="place-box" href="https://www.google.com/maps?q=HAL+Aerospace+Museum,+Bangalore" target="_blank">HAL Museum</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Bangalore+Fort" target="_blank">Bangalore Fort</a>
+        <a class="place-box" href="https://www.google.com/maps?q=M.G.+Road+Boulevard,+Bangalore" target="_blank">MG Rd Boulevard</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Kempegowda+Museum,+Bangalore" target="_blank">Kempegowda Museum</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Cubbon+Park+Aquarium,+Bangalore" target="_blank">Aquarium</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Butterfly+Park,+Bangalore" target="_blank">Butterfly Park</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Innovative+Film+City,+Bangalore" target="_blank">Film City</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Jawaharlal+Nehru+Biological+Park,+Bangalore" target="_blank">Biological Park</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Kanakapura+Road+Art+Gallery,+Bangalore" target="_blank">Kanakapura Gallery</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Rangoli+Metro+Art+Center,+Bangalore" target="_blank">Rangoli Art Center</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Bangalore+Turf+Club" target="_blank">Turf Club</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Lumbini+Gardens,+Bangalore" target="_blank">Lumbini Gardens</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Bangalore+Golf+Club" target="_blank">Golf Club</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Chunchi+Falls,+Bangalore" target="_blank">Chunchi Falls</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Mysore+Sand+Sculpture+Museum,+Bangalore" target="_blank">Sand Sculpture</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Rasta+Café,+Bangalore" target="_blank">Rasta Café</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Neeladri+Water+Park,+Bangalore" target="_blank">Neeladri Park</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Freedom+Park,+Bangalore" target="_blank">Freedom Park</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Sri+Vani+Science+Park,+Bangalore" target="_blank">Vani Science Park</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Skandagiri,+Bangalore" target="_blank">Skandagiri</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Ragi+Gudda+Temple,+Bangalore" target="_blank">Ragi Gudda Temple</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Shivanasamudra+Falls,+Bangalore" target="_blank">Shivanasamudra Falls✅</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Kanakapura+Art+Gallery,+Bangalore" target="_blank">Kanakapura Art</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Gavi+Gangadhareshwara+Temple,+Bangalore" target="_blank">Gavi Temple</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Ulsoor+Lake,+Bangalore" target="_blank">Ulsoor Photowalk</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Safina+Plaza,+Bangalore" target="_blank">Safina Plaza</a>
+        <a class="place-box" href="https://www.google.com/maps?q=Kanakapura+Wine+Tour,+Bangalore" target="_blank">Wine Tour</a>
+        <a class="place-box" href="https://maps.app.goo.gl/mrDjy8ZvZTfLNqfV6" target="_blank">Sri Guruvayoorappan Temple</a>
+        <a class="place-box" href="https://maps.app.goo.gl/zrpCjRKhLzQwDsuR6" target="_blank">Pyramid Valley International✅</a>
+        <a class="place-box" href="https://maps.app.goo.gl/vQ9qmSJCMHqw4p3N6" target="_blank">Vasu Hotel✅</a>
+        <a class="place-box" href="https://maps.app.goo.gl/bBZahUcWdm8Ed52S7" target="_blank">Sri Uttaradi Matha</a>
+        <a class="place-box" href="https://maps.app.goo.gl/9JvuQQcFDUSN8P718" target="_blank">Vidyarthi Bhavan</a>
+        <a class="place-box" href="https://maps.app.goo.gl/XrW7xvntVT676TLKA" target="_blank">Dakshin Delicacy</a>
+        <a class="place-box" href="https://maps.app.goo.gl/rQ2i2woHg9iUhVDc9" target="_blank">Guhantara</a>
+        <a class="place-box" href="https://maps.app.goo.gl/EJTAuBKqBXWNBMco7" target="_blank">Mahogany Glen</a>
+        <a class="place-box" href="https://maps.app.goo.gl/8hQYwfYYRcZVFRccA" target="_blank">Nesara Centre For Culture</a>
+        <a class="place-box" href="https://maps.app.goo.gl/XD69BkV4dYzFd2Zv8" target="_blank">ISKCON Vaikuntha Hill✅</a>
+        <a class="place-box" href="https://maps.app.goo.gl/PBKUQrou1mw8vWTK9" target="_blank">BLR Brewing Co - Kanakapura Road</a>
+        <a class="place-box" href="" target="_blank"></a>
+        <a class="place-box" href="" target="_blank"></a>
+        <a class="place-box" href="" target="_blank"></a>
+        <a class="place-box" href="" target="_blank"></a>
+        <a class="place-box" href="" target="_blank"></a>
+    </section>
+
+    <footer>
+        <p>&copy; 2023, Places to Visit in Bangalore</p>
+    </footer>
+
+</body>
+
+</html>
