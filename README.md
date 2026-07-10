@@ -1,1 +1,1 @@
-# My-Cool-Apps
+# MyCoolApps
