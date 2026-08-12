@@ -10,10 +10,6 @@ A collection of useful web utilities, tools, and mini-applications built using H
 - **Billing & Management:** Quick-access tools like a Bill generator and presentation helper.
 - **Fully Hosted:** Accessible from anywhere via GitHub Pages.
 
-## 🌐 Live Demo
-
-https://manjesh2022.github.io/MyCoolApps/
-
 ## 📸 Preview
 
 <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/3d543943-756f-406d-8459-1cbc1adfa548" />
@@ -24,6 +20,10 @@ https://manjesh2022.github.io/MyCoolApps/
 - HTML5
 - CSS3
 - JavaScript
+
+## 🌐 Live Demo
+
+https://manjesh2022.github.io/MyCoolApps/
 
 ## 📦 What's Inside?
 
