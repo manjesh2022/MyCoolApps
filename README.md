@@ -12,8 +12,8 @@ A collection of useful web utilities, tools, and mini-applications built using H
 
 ## 📸 Preview
 
-![My Cool Apps UI Preview](assets/ui-preview.png)
 <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/3d543943-756f-406d-8459-1cbc1adfa548" />
+<img width="1366" height="1506" alt="image" src="https://github.com/user-attachments/assets/4ba561e8-047f-4a89-8508-4ba3a031ea4e" />
 
 ## 🛠️ Technologies Used
 
