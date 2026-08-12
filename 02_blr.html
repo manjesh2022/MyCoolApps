@@ -3,164 +3,747 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Bangalore</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangalore - Explore the Garden City (Table & Grid View)</title>
     <link rel="icon" href="0favicon/blr.png" type="image/png" />
     <style>
         body {
-            background-color: #2b2b2b;
-            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            color: #e0e0e0;
         }
 
         header {
-            background-color: #2b2b2b;
+            background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
             text-align: center;
             color: #ff7e8f;
             position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-			z-index: 1001;
+            z-index: 1001;
+            padding: 15px 20px;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-sizing: border-box;
         }
 
-        header p {
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        #searchInput {
+            padding: 8px 16px;
+            width: 220px;
+            border-radius: 20px;
+            border: 1px solid #444;
+            background-color: #1a1a1a;
             color: #ff7e8f;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        #searchInput:focus {
+            border-color: #ff7e8f;
+        }
+
+        #searchInput::placeholder {
+            color: #888;
+        }
+
+        /* Stats Counter Badge with Fixed Width for numbers to prevent layout shift */
+        .stats-badge {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 13px;
+            color: #a7f3d0;
+            font-weight: 600;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stats-badge .count-display {
+            display: inline-block;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            width: 22px; /* Fixed width prevents shifting when digits change */
+            color: #34d399;
+        }
+
+        /* View Toggle Switch / Buttons */
+        .view-toggle {
+            display: flex;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 6px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .view-btn.active {
+            background-color: #ff7e8f;
+            color: #121212;
         }
 
         footer {
-            background-color: #2b2b2b;
+            background-color: #1e1e1e;
             padding: 10px 0;
             text-align: center;
-            color: #ff7e8f;
+            color: #888;
             position: fixed;
             bottom: 0;
+            left: 0;
             width: 100%;
             z-index: 1000;
+            border-top: 1px solid #333;
+            font-size: 13px;
         }
 
-        .places-grid {
-			display: grid;
-			grid-template-columns: repeat(5, 1fr);
-			gap: 20px;
-			padding: 130px 30px 100px;
-			justify-items: center;
-		}
+        footer p {
+            margin: 0;
+        }
 
-		.place-box {
-			background: linear-gradient(145deg, #ffb6c1, #ff7e8f);
-			color: #2b2b2b;
-			padding: 20px;
-			border-radius: 15px;
-			text-align: center;
-			font-weight: bold;
-			text-decoration: none;
-			transition: transform 0.25s ease, box-shadow 0.25s ease;
-			width: 100%;
-			max-width: 220px;
-			height: 50px; /* FIXED height */
-			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-			position: relative;
-			overflow: hidden; /* prevents text overflow */
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-		}
+        .main-container {
+            max-width: 1100px;
+            height: calc(100vh - 170px);
+            margin: 85px auto 65px;
+            padding: 0 20px;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
 
-		.place-box::before {
-			font-size: 28px;
-			display: block;
-			margin-bottom: 10px;
-			transition: transform 0.3s ease;
-		}
+        /* Table View Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: transparent;
+        }
 
-		.place-box:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-		}
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #1a1a1a;
+            color: #ff7e8f;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 2px solid #ff7e8f;
+            cursor: pointer;
+            user-select: none;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
+        }
 
-		.place-box:hover::before {
-			transform: scale(1.2) rotate(5deg);
-		}
+        thead th:hover {
+            background-color: #282828;
+            color: #ffb6c1;
+        }
 
+        th span.sort-indicator {
+            font-size: 11px;
+            margin-left: 6px;
+            color: #888;
+        }
+
+        tr.place-row {
+            background-color: #1e1e1e;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        tr.place-row td {
+            border-bottom: 8px solid #121212; 
+        }
+
+        tr.place-row:hover {
+            background-color: #262626;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        td {
+            padding: 14px 18px;
+            color: #d1d5db;
+            font-size: 14px;
+            vertical-align: middle;
+            background-color: #1e1e1e;
+        }
+
+        td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .place-link {
+            color: #ffb6c1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .place-link:hover {
+            color: #ff7e8f;
+            text-decoration: underline;
+        }
+
+        .address-text {
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        td.checkbox-cell {
+            text-align: center;
+        }
+
+        .visit-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ff7e8f;
+            border-radius: 6px;
+            background-color: transparent;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .visit-checkbox:checked {
+            background-color: #10b981;
+            border-color: #10b981;
+        }
+
+        .visit-checkbox:checked::after {
+            content: '✔';
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        tr.visited td {
+            background-color: #0d231a !important;
+            color: #6ee7b7;
+        }
+
+        tr.visited .place-link {
+            color: #34d399;
+        }
+
+        tr.visited .address-text {
+            color: #4ade80;
+        }
+
+        tr.visited .visit-checkbox {
+            border-color: #34d399;
+        }
+
+        /* Grid View Styles (Cards) */
+        #gridViewContainer {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            padding-bottom: 20px;
+        }
+
+        .place-card {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, background-color 0.2s;
+            border: 1px solid #2d2d2d;
+            position: relative;
+        }
+
+        .place-card:hover {
+            background-color: #262626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+        }
+
+        .place-card .card-content {
+            margin-bottom: 12px;
+        }
+
+        .place-card .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffb6c1;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .place-card .card-title:hover {
+            color: #ff7e8f;
+            text-decoration: underline;
+        }
+
+        .place-card .card-address {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+
+        .place-card .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #2d2d2d;
+            padding-top: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .place-card.visited {
+            background-color: #0d231a !important;
+            border-color: #059669;
+        }
+
+        .place-card.visited .card-title {
+            color: #34d399;
+        }
+
+        .place-card.visited .card-address {
+            color: #4ade80;
+        }
+
+        .place-card.visited .visit-checkbox {
+            border-color: #34d399;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff7e8f;
+        }
     </style>
 </head>
 
 <body>
 
     <header>
-        <h1>Explore Bangalore: Discover the beauty of the Garden City</h1>
+        <h1>Explore Bangalore</h1>
+        <div class="header-controls">
+            <input type="text" id="searchInput" onkeyup="filterPlaces()" placeholder="Search places, addresses..." aria-label="Search places">
+            <div class="stats-badge">
+                Visited: <span id="visitedCount" class="count-display">0</span>/<span id="totalCount" class="count-display">0</span>
+            </div>
+            <div class="view-toggle">
+                <button type="button" id="tableViewBtn" class="view-btn active" onclick="switchView('table')">Table</button>
+                <button type="button" id="gridViewBtn" class="view-btn" onclick="switchView('grid')">Grid</button>
+            </div>
+        </div>
     </header>
 
-    <section class="places-grid">
-        <a class="place-box" href="https://www.google.com/maps?q=Cubbon+Park,+Bangalore" target="_blank">Cubbon Park</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Lalbagh+Botanical+Garden,+Bangalore" target="_blank">Lalbagh Garden</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Bangalore+Palace" target="_blank">Bangalore Palace</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Vidhana+Soudha,+Bangalore" target="_blank">Vidhana Soudha</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Tipu+Sultan's+Summer+Palace,+Bangalore" target="_blank">Tipu Sultan's Palace</a>
-        <a class="place-box" href="https://www.google.com/maps?q=ISKCON+Temple+Bangalore" target="_blank">ISKCON Temple</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Bull+Temple,+Bangalore" target="_blank">Bull Temple</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Ulsoor+Lake,+Bangalore" target="_blank">Ulsoor Lake</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Wonderla+Amusement+Park,+Bangalore" target="_blank">Wonderla Park</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Bannerghatta+National+Park,+Bangalore" target="_blank">Bannerghatta Park✅</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Nandi+Hills,+Bangalore" target="_blank">Nandi Hills</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Art+of+Living+International+Center,+Bangalore" target="_blank">Art of Living✅</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Jawaharlal+Nehru+Planetarium,+Bangalore" target="_blank">Planetarium</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Visvesvaraya+Museum,+Bangalore" target="_blank">Visvesvaraya Museum</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Commercial+Street,+Bangalore" target="_blank">Commercial Street</a>
-        <a class="place-box" href="https://www.google.com/maps?q=MG+Road,+Bangalore" target="_blank">MG Road</a>
-        <a class="place-box" href="https://www.google.com/maps?q=UB+City+Mall,+Bangalore" target="_blank">UB City Mall</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Phoenix+Marketcity,+Bangalore" target="_blank">Phoenix Marketcity</a>
-        <a class="place-box" href="https://www.google.com/maps?q=St.+Mary's+Basilica,+Bangalore" target="_blank">St. Mary's Basilica</a>
-        <a class="place-box" href="https://www.google.com/maps?q=St.+Patrick's+Church,+Bangalore" target="_blank">St. Patrick's Church</a>
-        <a class="place-box" href="https://www.google.com/maps?q=NGMA,+Bangalore" target="_blank">NGMA</a>
-        <a class="place-box" href="https://www.google.com/maps?q=HAL+Aerospace+Museum,+Bangalore" target="_blank">HAL Museum</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Bangalore+Fort" target="_blank">Bangalore Fort</a>
-        <a class="place-box" href="https://www.google.com/maps?q=M.G.+Road+Boulevard,+Bangalore" target="_blank">MG Rd Boulevard</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Kempegowda+Museum,+Bangalore" target="_blank">Kempegowda Museum</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Cubbon+Park+Aquarium,+Bangalore" target="_blank">Aquarium</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Butterfly+Park,+Bangalore" target="_blank">Butterfly Park</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Innovative+Film+City,+Bangalore" target="_blank">Film City</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Jawaharlal+Nehru+Biological+Park,+Bangalore" target="_blank">Biological Park</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Kanakapura+Road+Art+Gallery,+Bangalore" target="_blank">Kanakapura Gallery</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Rangoli+Metro+Art+Center,+Bangalore" target="_blank">Rangoli Art Center</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Bangalore+Turf+Club" target="_blank">Turf Club</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Lumbini+Gardens,+Bangalore" target="_blank">Lumbini Gardens</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Bangalore+Golf+Club" target="_blank">Golf Club</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Chunchi+Falls,+Bangalore" target="_blank">Chunchi Falls</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Mysore+Sand+Sculpture+Museum,+Bangalore" target="_blank">Sand Sculpture</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Rasta+Café,+Bangalore" target="_blank">Rasta Café</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Neeladri+Water+Park,+Bangalore" target="_blank">Neeladri Park</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Freedom+Park,+Bangalore" target="_blank">Freedom Park</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Sri+Vani+Science+Park,+Bangalore" target="_blank">Vani Science Park</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Skandagiri,+Bangalore" target="_blank">Skandagiri</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Ragi+Gudda+Temple,+Bangalore" target="_blank">Ragi Gudda Temple</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Shivanasamudra+Falls,+Bangalore" target="_blank">Shivanasamudra Falls✅</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Kanakapura+Art+Gallery,+Bangalore" target="_blank">Kanakapura Art</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Gavi+Gangadhareshwara+Temple,+Bangalore" target="_blank">Gavi Temple</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Ulsoor+Lake,+Bangalore" target="_blank">Ulsoor Photowalk</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Safina+Plaza,+Bangalore" target="_blank">Safina Plaza</a>
-        <a class="place-box" href="https://www.google.com/maps?q=Kanakapura+Wine+Tour,+Bangalore" target="_blank">Wine Tour</a>
-        <a class="place-box" href="https://maps.app.goo.gl/mrDjy8ZvZTfLNqfV6" target="_blank">Sri Guruvayoorappan Temple</a>
-        <a class="place-box" href="https://maps.app.goo.gl/zrpCjRKhLzQwDsuR6" target="_blank">Pyramid Valley International✅</a>
-        <a class="place-box" href="https://maps.app.goo.gl/vQ9qmSJCMHqw4p3N6" target="_blank">Vasu Hotel✅</a>
-        <a class="place-box" href="https://maps.app.goo.gl/bBZahUcWdm8Ed52S7" target="_blank">Sri Uttaradi Matha</a>
-        <a class="place-box" href="https://maps.app.goo.gl/9JvuQQcFDUSN8P718" target="_blank">Vidyarthi Bhavan</a>
-        <a class="place-box" href="https://maps.app.goo.gl/XrW7xvntVT676TLKA" target="_blank">Dakshin Delicacy</a>
-        <a class="place-box" href="https://maps.app.goo.gl/rQ2i2woHg9iUhVDc9" target="_blank">Guhantara</a>
-        <a class="place-box" href="https://maps.app.goo.gl/EJTAuBKqBXWNBMco7" target="_blank">Mahogany Glen</a>
-        <a class="place-box" href="https://maps.app.goo.gl/8hQYwfYYRcZVFRccA" target="_blank">Nesara Centre For Culture</a>
-        <a class="place-box" href="https://maps.app.goo.gl/XD69BkV4dYzFd2Zv8" target="_blank">ISKCON Vaikuntha Hill✅</a>
-        <a class="place-box" href="https://maps.app.goo.gl/PBKUQrou1mw8vWTK9" target="_blank">BLR Brewing Co - Kanakapura Road</a>
-        <a class="place-box" href="" target="_blank"></a>
-        <a class="place-box" href="" target="_blank"></a>
-        <a class="place-box" href="" target="_blank"></a>
-        <a class="place-box" href="" target="_blank"></a>
-        <a class="place-box" href="" target="_blank"></a>
-    </section>
+    <div class="main-container">
+        <!-- Table View Container -->
+        <div id="tableViewContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 35%;" onclick="sortTable('name')">Place / Attraction <span id="sort-name" class="sort-indicator">↕</span></th>
+                        <th style="width: 50%;" onclick="sortTable('address')">Address <span id="sort-address" class="sort-indicator">↕</span></th>
+                        <th style="width: 15%; text-align: center;" onclick="sortTable('visited')">Visited <span id="sort-visited" class="sort-indicator">↕</span></th>
+                    </tr>
+                </thead>
+                <tbody id="placesTableBody">
+                    <!-- Populated dynamically via script below -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Grid View Container -->
+        <div id="gridViewContainer">
+            <!-- Populated dynamically via script below -->
+        </div>
+    </div>
 
     <footer>
-        <p>&copy; 2023, Places to Visit in Bangalore</p>
+        <p>&copy; 2026 Explore Bangalore - Multi-View Edition</p>
     </footer>
+
+    <script>
+        const placesData = [
+            { name: "Shivanasamudra Falls", address: "Malavalli Taluk, Mandya District, Karnataka, India" },
+            { name: "ISKCON Vaikuntha Hill", address: "12th Main Road, Vaikunta Hill, Vasanthapura, Uttarahalli Hobli, Bengaluru, Karnataka 560061" },
+            { name: "Cubbon Park", address: "Kasturba Road, Behind High Court of Karnataka, Sampangi Rama Nagar, Bengaluru, Karnataka 560001" },
+            { name: "Lalbagh Garden", address: "Lalbagh Road, Mavalli, Bengaluru, Karnataka 560004" },
+            { name: "Bangalore Palace", address: "Vasanth Nagar, Bengaluru, Karnataka 560052" },
+            { name: "Vidhana Soudha", address: "Ambedkar Veedhi, Sampangi Rama Nagar, Bengaluru, Karnataka 560001" },
+            { name: "Tipu Sultan's Palace", address: "All-Apps Lane, Chamrajpet, Bengaluru, Karnataka 560018" },
+            { name: "ISKCON Temple", address: "Hare Krishna Hill, Chord Road, Rajajinagar, Bengaluru, Karnataka 560010" },
+            { name: "Bull Temple", address: "Bull Temple Road, Basavanagudi, Bengaluru, Karnataka 560004" },
+            { name: "Ulsoor Lake", address: "Halasuru, Bengaluru, Karnataka 560008" },
+            { name: "Wonderla Park", address: "28th Milestone, Bengaluru - Mysore Road, Hobli, Kadeeranahalli, Karnataka 562109" },
+            { name: "Bannerghatta Park", address: "Bannerghatta Biological Park, Bannerghatta, Bengaluru, Karnataka 560083" },
+            { name: "Nandi Hills", address: "Nandi Hills, Chikkaballapur District, Karnataka, 562103" },
+            { name: "Art of Living", address: "21st KM, Kanakapura Road, Udayapura, Bengaluru, Karnataka 560082" },
+            { name: "Planetarium", address: "Jawaharlal Nehru Planetarium, Sri T. Chowdaiah Road, High Grounds, Bengaluru, Karnataka 560001" },
+            { name: "Visvesvaraya Museum", address: "Kasturba Road, Ambedkar Veedhi, Bengaluru, Karnataka 560001" },
+            { name: "Commercial Street", address: "Tasker Town, Shivaji Nagar, Bengaluru, Karnataka 560001" },
+            { name: "MG Road", address: "Mahatma Gandhi Road, Craig Park Layout, Ashok Nagar, Bengaluru, Karnataka 560001" },
+            { name: "UB City Mall", address: "24, Vittal Mallya Road, D'Souza Layout, Ashok Nagar, Bengaluru, Karnataka 560001" },
+            { name: "Phoenix Marketcity", address: "Whitefield Main Road, Devasandra Industrial Estate, Mahadevapura, Bengaluru, Karnataka 560048" },
+            { name: "St. Mary's Basilica", address: "MS Nagar, Shivaji Nagar, Bengaluru, Karnataka 560051" },
+            { name: "St. Patrick's Church", address: "155, Brigade Road, Ashok Nagar, Bengaluru, Karnataka 560025" },
+            { name: "NGMA", address: "Palace Road, Vasanth Nagar, Bengaluru, Karnataka 560052" },
+            { name: "HAL Museum", address: "Old Airport Road, Marathahalli, Bengaluru, Karnataka 560037" },
+            { name: "Bangalore Fort", address: "New Tharagupet, Bengaluru, Karnataka 560002" },
+            { name: "MG Rd Boulevard", address: "Mahatma Gandhi Road, Ashok Nagar, Bengaluru, Karnataka 560001" },
+            { name: "Kempegowda Museum", address: "Mayo Hall, 1st Floor, MG Road, Ashok Nagar, Bengaluru, Karnataka 560001" },
+            { name: "Aquarium", address: "Cubbon Park, Kasturba Road, Bengaluru, Karnataka 560001" },
+            { name: "Butterfly Park", address: "Bannerghatta Biological Park, Bannerghatta, Bengaluru, Karnataka 560083" },
+            { name: "Film City", address: "Binny Mills, Near Magadi Road, Bengaluru, Karnataka 560023" },
+            { name: "Biological Park", address: "Bannerghatta Biological Park, Bannerghatta, Bengaluru, Karnataka 560083" },
+            { name: "Kanakapura Gallery", address: "Kanakapura Road, Udayapura, Bengaluru, Karnataka 560082" },
+            { name: "Rangoli Art Center", address: "Metro Boulevard, MG Road, Ashok Nagar, Bengaluru, Karnataka 560001" },
+            { name: "Turf Club", address: "Race Course Road, Gandhi Nagar, Bengaluru, Karnataka 560001" },
+            { name: "Lumbini Gardens", address: "Outer Ring Road, Hebbal, Bengaluru, Karnataka 560045" },
+            { name: "Golf Club", address: "Sankey Road, High Grounds, Bengaluru, Karnataka 560001" },
+            { name: "Chunchi Falls", address: "Kanakapura Taluk, Ramanagara District, Karnataka, 562121" },
+            { name: "Sand Sculpture", address: "Innovative Film City, Bidadi, Bengaluru, Karnataka 562109" },
+            { name: "Rasta Café", address: "7th Milestone, Bangalore-Mysore Highway, Kenthanahalli, Karnataka 562109" },
+            { name: "Neeladri Park", address: "Electronic City Phase 1, Bengaluru, Karnataka 560100" },
+            { name: "Freedom Park", address: "Seshadri Road, Attiguppe, Gandhi Nagar, Bengaluru, Karnataka 560009" },
+            { name: "Vani Science Park", address: "IISc Campus, Mathikere, Bengaluru, Karnataka 560012" },
+            { name: "Skandagiri", address: "Kalavarahalli, Chikkaballapur District, Karnataka, 562101" },
+            { name: "Ragi Gudda Temple", address: "9th Jayanagar Block, Jayanagar, Bengaluru, Karnataka 560069" },
+            { name: "Kanakapura Art", address: "Kanakapura Main Road, Bengaluru, Karnataka 560082" },
+            { name: "Gavi Temple", address: "Gavipuram, Kempegowda Nagar, Bengaluru, Karnataka 560019" },
+            { name: "Ulsoor Photowalk", address: "Halasuru Lake Area, Ulsoor, Bengaluru, Karnataka 560008" },
+            { name: "Safina Plaza", address: "84-85, Infantry Road, Tasker Town, Shivaji Nagar, Bengaluru, Karnataka 560001" },
+            { name: "Wine Tour", address: "Groz Roots / Chennais, Channapatna region, Ramanagara District, Karnataka (Various vineyards around Bangalore rural)" },
+            { name: "Sri Guruvayoorappan Temple", address: "1st Main Road, 3rd Block, Nagarbhavi, Bengaluru, Karnataka 560072" },
+            { name: "Pyramid Valley International", address: "Harohalli, Kanakapura Road, Bengaluru, Karnataka 562112" },
+            { name: "Vasu Hotel", address: "Devaraja Mohalla, Mandi Mohalla, Mysuru, Karnataka 570001 (Famous for Tuppa Dosa)" },
+            { name: "Sri Uttaradi Matha", address: "Basavanagudi, Bengaluru, Karnataka 560004" },
+            { name: "Vidyarthi Bhavan", address: "32, Gandhi Bazaar Main Road, Basavanagudi, Bengaluru, Karnataka 560004" },
+            { name: "Dakshin Delicacy", address: "Residency Road, Shanthala Nagar, Ashok Nagar, Bengaluru, Karnataka 560025" },
+            { name: "Guhantara", address: "Kanakapura Road, Kaggalipura, Bengaluru, Karnataka 560082" },
+            { name: "Mahogany Glen", address: "Nandi Hills Foothills, Chikkaballapur, Karnataka 562103" },
+            { name: "Nesara Centre For Culture", address: "Basavanagudi, Bengaluru, Karnataka 560004" },
+            { name: "BLR Brewing Co.", address: "7th Cross Road, Industrial Area, 5th Block, Koramangala, Bengaluru, Karnataka 560095" }
+        ];
+
+        let currentSortCol = '';
+        let currentSortAsc = true;
+        let currentView = 'table';
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('totalCount').textContent = placesData.length;
+            renderElements();
+            initializeInteraction();
+            applyFilterAndSort();
+        });
+
+        function renderElements() {
+            let tbody = document.getElementById('placesTableBody');
+            let gridContainer = document.getElementById('gridViewContainer');
+            
+            let tableHtml = '';
+            let gridHtml = '';
+
+            placesData.forEach((item, index) => {
+                let mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(item.name + ', ' + item.address)}`;
+                
+                tableHtml += `
+                    <tr class="place-row" data-index="${index}" data-name="${item.name.toLowerCase()}" data-address="${item.address.toLowerCase()}">
+                        <td><a class="place-link" href="${mapUrl}" target="_blank">${item.name}</a></td>
+                        <td class="address-text">${item.address}</td>
+                        <td class="checkbox-cell"><input type="checkbox" class="visit-checkbox" title="Mark as visited"></td>
+                    </tr>
+                `;
+
+                gridHtml += `
+                    <div class="place-card" data-index="${index}" data-name="${item.name.toLowerCase()}" data-address="${item.address.toLowerCase()}">
+                        <div class="card-content">
+                            <a class="card-title" href="${mapUrl}" target="_blank">${item.name}</a>
+                            <div class="card-address">${item.address}</div>
+                        </div>
+                        <div class="card-footer">
+                            <span>Visited</span>
+                            <input type="checkbox" class="visit-checkbox" title="Mark as visited">
+                        </div>
+                    </div>
+                `;
+            });
+
+            tbody.innerHTML = tableHtml;
+            gridContainer.innerHTML = gridHtml;
+        }
+
+        function switchView(viewType) {
+            currentView = viewType;
+            let tableCont = document.getElementById('tableViewContainer');
+            let gridCont = document.getElementById('gridViewContainer');
+            let tableBtn = document.getElementById('tableViewBtn');
+            let gridBtn = document.getElementById('gridViewBtn');
+
+            if (viewType === 'table') {
+                tableCont.style.display = 'block';
+                gridCont.style.display = 'none';
+                tableBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+            } else {
+                tableCont.style.display = 'none';
+                gridCont.style.display = 'grid';
+                gridBtn.classList.add('active');
+                tableBtn.classList.remove('active');
+            }
+        }
+
+        function updateVisitedCount() {
+            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_multiview')) || {};
+            let count = Object.keys(visitedData).length;
+            document.getElementById('visitedCount').textContent = count;
+        }
+
+        function initializeInteraction() {
+            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_multiview')) || {};
+            updateVisitedCount();
+
+            let rows = document.querySelectorAll('.place-row');
+            let cards = document.querySelectorAll('.place-card');
+
+            function handleCheckChange(index, isChecked) {
+                let placeName = placesData[index].name.toLowerCase();
+                
+                if (isChecked) {
+                    visitedData[placeName] = true;
+                } else {
+                    delete visitedData[placeName];
+                }
+                localStorage.setItem('visitedPlaces_multiview', JSON.stringify(visitedData));
+                updateVisitedCount();
+
+                document.querySelectorAll(`[data-index="${index}"]`).forEach(el => {
+                    let checkbox = el.querySelector('.visit-checkbox');
+                    if (isChecked) {
+                        el.classList.add('visited');
+                        if (checkbox) checkbox.checked = true;
+                    } else {
+                        el.classList.remove('visited');
+                        if (checkbox) checkbox.checked = false;
+                    }
+                });
+            }
+
+            rows.forEach(row => {
+                let idx = row.getAttribute('data-index');
+                let placeName = placesData[idx].name.toLowerCase();
+                let checkbox = row.querySelector('.visit-checkbox');
+
+                if (visitedData[placeName]) {
+                    row.classList.add('visited');
+                    checkbox.checked = true;
+                }
+
+                checkbox.addEventListener('change', function() {
+                    handleCheckChange(idx, this.checked);
+                });
+            });
+
+            cards.forEach(card => {
+                let idx = card.getAttribute('data-index');
+                let placeName = placesData[idx].name.toLowerCase();
+                let checkbox = card.querySelector('.visit-checkbox');
+
+                if (visitedData[placeName]) {
+                    card.classList.add('visited');
+                    checkbox.checked = true;
+                }
+
+                checkbox.addEventListener('change', function() {
+                    handleCheckChange(idx, this.checked);
+                });
+            });
+        }
+
+        function sortTable(column) {
+            if (currentSortCol === column) {
+                currentSortAsc = !currentSortAsc;
+            } else {
+                currentSortCol = column;
+                currentSortAsc = true;
+            }
+
+            document.querySelectorAll('.sort-indicator').forEach(el => el.textContent = '↕');
+            let indicator = document.getElementById(`sort-${column}`);
+            if (indicator) {
+                indicator.textContent = currentSortAsc ? '▲' : '▼';
+            }
+
+            applyFilterAndSort();
+        }
+
+        function applyFilterAndSort() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_multiview')) || {};
+            updateVisitedCount();
+
+            let indices = Array.from({ length: placesData.length }, (_, i) => i);
+
+            indices.sort((iA, iB) => {
+                if (!currentSortCol) return 0;
+                let itemA = placesData[iA];
+                let itemB = placesData[iB];
+
+                let valA, valB;
+                if (currentSortCol === 'name') {
+                    valA = itemA.name.toLowerCase();
+                    valB = itemB.name.toLowerCase();
+                } else if (currentSortCol === 'address') {
+                    valA = itemA.address.toLowerCase();
+                    valB = itemB.address.toLowerCase();
+                } else if (currentSortCol === 'visited') {
+                    valA = visitedData[itemA.name.toLowerCase()] ? 1 : 0;
+                    valB = visitedData[itemB.name.toLowerCase()] ? 1 : 0;
+                }
+
+                if (valA < valB) return currentSortAsc ? -1 : 1;
+                if (valA > valB) return currentSortAsc ? 1 : -1;
+                return 0;
+            });
+
+            let tbody = document.getElementById('placesTableBody');
+            let gridContainer = document.getElementById('gridViewContainer');
+
+            tbody.innerHTML = '';
+            gridContainer.innerHTML = '';
+
+            indices.forEach(idx => {
+                let item = placesData[idx];
+                let mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(item.name + ', ' + item.address)}`;
+                let isVisited = !!visitedData[item.name.toLowerCase()];
+
+                let tr = document.createElement('tr');
+                tr.className = `place-row ${isVisited ? 'visited' : ''}`;
+                tr.setAttribute('data-index', idx);
+                tr.setAttribute('data-name', item.name.toLowerCase());
+                tr.setAttribute('data-address', item.address.toLowerCase());
+                tr.innerHTML = `
+                    <td><a class="place-link" href="${mapUrl}" target="_blank">${item.name}</a></td>
+                    <td class="address-text">${item.address}</td>
+                    <td class="checkbox-cell"><input type="checkbox" class="visit-checkbox" ${isVisited ? 'checked' : ''} title="Mark as visited"></td>
+                `;
+
+                tr.querySelector('.visit-checkbox').addEventListener('change', function() {
+                    updateVisitedState(idx, this.checked);
+                });
+
+                let card = document.createElement('div');
+                card.className = `place-card ${isVisited ? 'visited' : ''}`;
+                card.setAttribute('data-index', idx);
+                card.setAttribute('data-name', item.name.toLowerCase());
+                card.setAttribute('data-address', item.address.toLowerCase());
+                card.innerHTML = `
+                    <div class="card-content">
+                        <a class="card-title" href="${mapUrl}" target="_blank">${item.name}</a>
+                        <div class="card-address">${item.address}</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>Visited</span>
+                        <input type="checkbox" class="visit-checkbox" ${isVisited ? 'checked' : ''} title="Mark as visited">
+                    </div>
+                `;
+
+                card.querySelector('.visit-checkbox').addEventListener('change', function() {
+                    updateVisitedState(idx, this.checked);
+                });
+
+                let matchesSearch = item.name.toLowerCase().includes(input) || item.address.toLowerCase().includes(input);
+                let displayVal = matchesSearch ? "" : "none";
+                tr.style.display = displayVal;
+                card.style.display = displayVal;
+
+                tbody.appendChild(tr);
+                gridContainer.appendChild(card);
+            });
+        }
+
+        function updateVisitedState(index, isChecked) {
+            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_multiview')) || {};
+            let placeName = placesData[index].name.toLowerCase();
+
+            if (isChecked) {
+                visitedData[placeName] = true;
+            } else {
+                delete visitedData[placeName];
+            }
+            localStorage.setItem('visitedPlaces_multiview', JSON.stringify(visitedData));
+            updateVisitedCount();
+
+            document.querySelectorAll(`[data-index="${index}"]`).forEach(el => {
+                let checkbox = el.querySelector('.visit-checkbox');
+                if (isChecked) {
+                    el.classList.add('visited');
+                    if (checkbox) checkbox.checked = true;
+                } else {
+                    el.classList.remove('visited');
+                    if (checkbox) checkbox.checked = false;
+                }
+            });
+        }
+
+        function filterPlaces() {
+            applyFilterAndSort();
+        }
+    </script>
 
 </body>
 
