@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PC Shortcut Keys</title>
+    <!-- =========================================
+         FAVICON
+    ========================================== -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⌨️</text></svg>" />
+    <style>
+        /* =========================================
+           GLOBAL
+        ========================================== */
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background: #0f1117;
+                color: #e6e6e6;
+            }
+            /* =========================================
+           FIXED HEADER
+        ========================================== */
+            .top-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                min-height: 82px;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 35px;
+                padding: 15px 30px;
+                background: #181b23;
+                border-bottom: 1px solid #292d38;
+                box-shadow: 0 3px 15px rgba(0, 0, 0, 0.35);
+            }
+            /* =========================================
+           HEADER TITLE
+        ========================================== */
+            .header-content {
+                min-width: 260px;
+                flex-shrink: 0;
+            }
+            .header-content h1 {
+                margin: 0;
+                color: #ffffff;
+                font-size: 27px;
+                white-space: nowrap;
+            }
+            /* =========================================
+           PROGRESS SECTION
+        ========================================== */
+            .progress-section {
+                flex: 1;
+                max-width: 800px;
+            }
+            .progress-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+                color: #aeb4c0;
+                font-size: 14px;
+            }
+            .progress-info strong {
+                color: #ffffff;
+                font-size: 14px;
+            }
+            /* =========================================
+           PROGRESS BAR
+        ========================================== */
+            .progress-bar {
+                width: 100%;
+                height: 9px;
+                background: #292d38;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+            .progress-fill {
+                height: 100%;
+                width: 0%;
+                background: #4ade80;
+                border-radius: 20px;
+            }
+            /* =========================================
+           HEADER ACTION BUTTON GROUP
+        ========================================== */
+            .header-actions {
+                display: flex;
+                align-items: center;
+                flex-shrink: 0;
+                background: #090d19;
+                border: 1px solid #30394c;
+                border-radius: 14px;
+                overflow: hidden;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            }
+            /* =========================================
+           ACTION BUTTON
+        ========================================== */
+            .action-btn {
+                width: 43px;
+                height: 36px;
+                padding: 0;
+                border: none;
+                border-right: 1px solid #30394c;
+                background: transparent;
+                color: #9da8bb;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .action-btn:last-child {
+                border-right: none;
+            }
+            .action-btn:hover {
+                background: #1a202d;
+                color: #ffffff;
+            }
+            .action-btn:active {
+                background: #222938;
+            }
+            /* =========================================
+           SVG ICON
+        ========================================== */
+            .action-btn svg {
+                width: 17px;
+                height: 17px;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+            /* =========================================
+           RESET HOVER
+        ========================================== */
+            .action-btn.reset:hover {
+                background: #2a171b;
+                color: #ff7b86;
+            }
+            /* =========================================
+           MAIN CONTAINER
+        ========================================== */
+            .container {
+                width: 94%;
+                max-width: 1600px;
+                margin: auto;
+                padding-top: 110px;
+                padding-bottom: 40px;
+            }
+            /* =========================================
+           CARDS GRID
+        ========================================== */
+            .cards {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 18px;
+            }
+            /* =========================================
+           CARD
+        ========================================== */
+            .card {
+                background: #181b23;
+                border: 1px solid #292d38;
+                border-radius: 12px;
+                padding: 18px;
+            }
+            .card h2 {
+                margin: 0 0 15px;
+                padding-bottom: 12px;
+                color: #ffffff;
+                font-size: 19px;
+                border-bottom: 1px solid #292d38;
+            }
+            /* =========================================
+           SHORTCUT LIST
+        ========================================== */
+            .shortcut-list {
+                display: flex;
+                flex-direction: column;
+            }
+            /* =========================================
+           SHORTCUT ROW
+        ========================================== */
+            .shortcut {
+                display: grid;
+                grid-template-columns: 22px 1fr auto;
+                align-items: center;
+                gap: 8px;
+                padding: 9px 0;
+                border-bottom: 1px solid #252832;
+            }
+            .shortcut:last-child {
+                border-bottom: none;
+            }
+            /* =========================================
+           DESCRIPTION
+        ========================================== */
+            .action {
+                color: #b8bec9;
+                font-size: 13px;
+            }
+            /* =========================================
+           CHECKBOX
+        ========================================== */
+            .check {
+                width: 17px;
+                height: 17px;
+                cursor: pointer;
+                accent-color: #4ade80;
+            }
+            /* =========================================
+           CHECKED STYLE
+        ========================================== */
+            .shortcut.checked .action {
+                color: #6ee7a0;
+            }
+            .shortcut.checked kbd {
+                opacity: 0.65;
+            }
+            /* =========================================
+           KEYBOARD KEY
+        ========================================== */
+            kbd {
+                background: #0b0d12;
+                border: 1px solid #3b404c;
+                border-radius: 5px;
+                padding: 4px 7px;
+                color: #ffffff;
+                font-family: Consolas, monospace;
+                font-size: 12px;
+                white-space: nowrap;
+                box-shadow: 0 2px 0 #000;
+            }
+            /* =========================================
+           FOOTER
+        ========================================== */
+            footer {
+                text-align: center;
+                color: #626977;
+                padding: 10px 0 30px;
+                font-size: 13px;
+            }
+            /* =========================================
+           TABLET
+        ========================================== */
+            @media (max-width: 1200px) {
+                .cards {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+            /* =========================================
+           SMALLER HEADER
+        ========================================== */
+            @media (max-width: 900px) {
+                .top-header {
+                    height: auto;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                    padding: 12px 18px;
+                }
+                .header-content {
+                    min-width: auto;
+                }
+                .header-content h1 {
+                    font-size: 23px;
+                }
+                .progress-section {
+                    flex: 1;
+                    min-width: 250px;
+                }
+                .container {
+                    padding-top: 125px;
+                }
+            }
+            /* =========================================
+           MOBILE
+        ========================================== */
+            @media (max-width: 650px) {
+                .cards {
+                    grid-template-columns: 1fr;
+                }
+                .top-header {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+                .header-content {
+                    text-align: center;
+                }
+                .progress-section {
+                    width: 100%;
+                    max-width: none;
+                }
+                .header-actions {
+                    align-self: center;
+                }
+                .container {
+                    width: 94%;
+                    padding-top: 190px;
+                }
+            }
+    </style>
+</head>
+<body>
+    <!-- =========================================
+         FIXED HEADER
+    ========================================== -->
+    <header class="top-header">
+        <!-- TITLE -->
+        <div class="header-content">
+            <h1>💻 PC Shortcut Keys</h1>
+        </div>
+        <!-- PROGRESS -->
+        <div class="progress-section">
+            <div class="progress-info">
+                <span> Knowledge Progress </span>
+                <strong id="progressText"> 0 / 0 (0%) </strong>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        <!-- =====================================
+             IMPORT / EXPORT / RESET
+        ====================================== -->
+        <div class="header-actions">
+            <!-- IMPORT -->
+            <button class="action-btn" onclick="importProgress()" title="Import Progress" aria-label="Import Progress">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3v12"></path>
+                    <path d="M7 10l5 5 5-5"></path>
+                    <path d="M5 21h14"></path>
+                </svg>
+            </button>
+            <!-- EXPORT -->
+            <button class="action-btn" onclick="exportProgress()" title="Export Progress" aria-label="Export Progress">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 21V9"></path>
+                    <path d="M7 14l5-5 5 5"></path>
+                    <path d="M5 3h14"></path>
+                </svg>
+            </button>
+            <!-- RESET -->
+            <button class="action-btn reset" onclick="resetProgress()" title="Reset Progress" aria-label="Reset Progress">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M8 6V4h8v2"></path>
+                    <path d="M19 6l-1 15H6L5 6"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+            </button>
+        </div>
+        <!-- HIDDEN IMPORT FILE -->
+        <input type="file" id="importFile" accept=".json" hidden />
+    </header>
+    <!-- =========================================
+         MAIN
+    ========================================== -->
+    <main class="container">
+        <div class="cards">
+            <!-- =====================================
+                 CARD 1
+            ====================================== -->
+            <section class="card">
+                <h2>⭐ Most Useful</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut" data-id="copy">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Copy </span>
+                        <kbd> Ctrl + C </kbd>
+                    </div>
+                    <div class="shortcut" data-id="cut">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Cut </span>
+                        <kbd> Ctrl + X </kbd>
+                    </div>
+                    <div class="shortcut" data-id="paste">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Paste </span>
+                        <kbd> Ctrl + V </kbd>
+                    </div>
+                    <div class="shortcut" data-id="undo">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Undo </span>
+                        <kbd> Ctrl + Z </kbd>
+                    </div>
+                    <div class="shortcut" data-id="redo">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Redo </span>
+                        <kbd> Ctrl + Y </kbd>
+                    </div>
+                    <div class="shortcut" data-id="select-all">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Select All </span>
+                        <kbd> Ctrl + A </kbd>
+                    </div>
+                    <div class="shortcut" data-id="save">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Save </span>
+                        <kbd> Ctrl + S </kbd>
+                    </div>
+                    <div class="shortcut" data-id="print">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Print </span>
+                        <kbd> Ctrl + P </kbd>
+                    </div>
+                    <div class="shortcut" data-id="find">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Find </span>
+                        <kbd> Ctrl + F </kbd>
+                    </div>
+                    <div class="shortcut" data-id="switch-apps">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Switch Apps </span>
+                        <kbd> Alt + Tab </kbd>
+                    </div>
+                </div>
+            </section>
+            <!-- =====================================
+                 CARD 2
+            ====================================== -->
+            <section class="card">
+                <h2>🪟 Windows</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut" data-id="file-explorer">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> File Explorer </span>
+                        <kbd> Win + E </kbd>
+                    </div>
+                    <div class="shortcut" data-id="desktop">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Desktop </span>
+                        <kbd> Win + D </kbd>
+                    </div>
+                    <div class="shortcut" data-id="lock-pc">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Lock PC </span>
+                        <kbd> Win + L </kbd>
+                    </div>
+                    <div class="shortcut" data-id="settings">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Settings </span>
+                        <kbd> Win + I </kbd>
+                    </div>
+                    <div class="shortcut" data-id="run">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Run </span>
+                        <kbd> Win + R </kbd>
+                    </div>
+                    <div class="shortcut" data-id="search">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Search </span>
+                        <kbd> Win + S </kbd>
+                    </div>
+                    <div class="shortcut" data-id="quick-settings">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Quick Settings </span>
+                        <kbd> Win + A </kbd>
+                    </div>
+                    <div class="shortcut" data-id="quick-link">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Quick Link Menu </span>
+                        <kbd> Win + X </kbd>
+                    </div>
+                    <div class="shortcut" data-id="notifications">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Notifications </span>
+                        <kbd> Win + N </kbd>
+                    </div>
+                    <div class="shortcut" data-id="clipboard">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Clipboard History </span>
+                        <kbd> Win + V </kbd>
+                    </div>
+                    <div class="shortcut" data-id="emoji">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Emoji Panel </span>
+                        <kbd> Win + . </kbd>
+                    </div>
+                </div>
+            </section>
+            <!-- =====================================
+                 CARD 3
+            ====================================== -->
+            <section class="card">
+                <h2>🌐 Browser</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut" data-id="new-tab">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> New Tab </span>
+                        <kbd> Ctrl + T </kbd>
+                    </div>
+                    <div class="shortcut" data-id="close-tab">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Close Tab </span>
+                        <kbd> Ctrl + W </kbd>
+                    </div>
+                    <div class="shortcut" data-id="reopen-tab">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Reopen Tab </span>
+                        <kbd> Ctrl + Shift + T </kbd>
+                    </div>
+                    <div class="shortcut" data-id="next-tab">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Next Tab </span>
+                        <kbd> Ctrl + Tab </kbd>
+                    </div>
+                    <div class="shortcut" data-id="previous-tab">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Previous Tab </span>
+                        <kbd> Ctrl + Shift + Tab </kbd>
+                    </div>
+                    <div class="shortcut" data-id="address-bar">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Address Bar </span>
+                        <kbd> Ctrl + L </kbd>
+                    </div>
+                    <div class="shortcut" data-id="downloads">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Downloads </span>
+                        <kbd> Ctrl + J </kbd>
+                    </div>
+                    <div class="shortcut" data-id="history">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> History </span>
+                        <kbd> Ctrl + H </kbd>
+                    </div>
+                    <div class="shortcut" data-id="bookmark">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Bookmark </span>
+                        <kbd> Ctrl + D </kbd>
+                    </div>
+                    <div class="shortcut" data-id="incognito">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Incognito </span>
+                        <kbd> Ctrl + Shift + N </kbd>
+                    </div>
+                    <div class="shortcut" data-id="hard-refresh">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Hard Refresh </span>
+                        <kbd> Ctrl + R or F5 </kbd>
+                    </div>
+                </div>
+            </section>
+            <!-- =====================================
+                 CARD 4
+            ====================================== -->
+            <section class="card">
+                <h2>🖥️ Window Control</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut" data-id="switch-windows">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Switch Apps </span>
+                        <kbd> Alt + Tab </kbd>
+                    </div>
+                    <div class="shortcut" data-id="close-window">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Close Window </span>
+                        <kbd> Alt + F4 </kbd>
+                    </div>
+                    <div class="shortcut" data-id="task-manager">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Task Manager </span>
+                        <kbd> Ctrl + Shift + Esc </kbd>
+                    </div>
+                    <div class="shortcut" data-id="snap-left">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Snap Left </span>
+                        <kbd> Win + ← </kbd>
+                    </div>
+                    <div class="shortcut" data-id="snap-right">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Snap Right </span>
+                        <kbd> Win + → </kbd>
+                    </div>
+                    <div class="shortcut" data-id="maximize">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Maximize </span>
+                        <kbd> Win + ↑ </kbd>
+                    </div>
+                    <div class="shortcut" data-id="minimize">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Minimize </span>
+                        <kbd> Win + ↓ </kbd>
+                    </div>
+                    <div class="shortcut" data-id="task-view">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Task View </span>
+                        <kbd> Win + Tab </kbd>
+                    </div>
+                    <div class="shortcut" data-id="project-display">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Project Display </span>
+                        <kbd> Win + P </kbd>
+                    </div>
+                    <div class="shortcut" data-id="connect-devices">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Connect Devices </span>
+                        <kbd> Win + K </kbd>
+                    </div>
+                </div>
+            </section>
+            <!-- =====================================
+                 CARD 5
+            ====================================== -->
+            <section class="card">
+                <h2>✍️ Text Editing</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut" data-id="bold">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Bold </span>
+                        <kbd> Ctrl + B </kbd>
+                    </div>
+                    <div class="shortcut" data-id="italic">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Italic </span>
+                        <kbd> Ctrl + I </kbd>
+                    </div>
+                    <div class="shortcut" data-id="underline">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Underline </span>
+                        <kbd> Ctrl + U </kbd>
+                    </div>
+                    <div class="shortcut" data-id="previous-word">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Previous Word </span>
+                        <kbd> Ctrl + ← </kbd>
+                    </div>
+                    <div class="shortcut" data-id="next-word">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Next Word </span>
+                        <kbd> Ctrl + → </kbd>
+                    </div>
+                    <div class="shortcut" data-id="delete-previous-word">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Delete Previous Word </span>
+                        <kbd> Ctrl + Backspace </kbd>
+                    </div>
+                    <div class="shortcut" data-id="delete-next-word">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Delete Next Word </span>
+                        <kbd> Ctrl + Delete </kbd>
+                    </div>
+                    <div class="shortcut" data-id="start-line">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Start of Line </span>
+                        <kbd> Home </kbd>
+                    </div>
+                    <div class="shortcut" data-id="end-line">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> End of Line </span>
+                        <kbd> End </kbd>
+                    </div>
+                    <div class="shortcut" data-id="start-document">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Start of Document </span>
+                        <kbd> Ctrl + Home </kbd>
+                    </div>
+                    <div class="shortcut" data-id="end-document">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> End of Document </span>
+                        <kbd> Ctrl + End </kbd>
+                    </div>
+                </div>
+            </section>
+            <!-- =====================================
+                 CARD 6
+            ====================================== -->
+            <section class="card">
+                <h2>📁 File Explorer</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut" data-id="rename">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Rename </span>
+                        <kbd> F2 </kbd>
+                    </div>
+                    <div class="shortcut" data-id="properties">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Properties </span>
+                        <kbd> Alt + Enter </kbd>
+                    </div>
+                    <div class="shortcut" data-id="new-folder">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> New Folder </span>
+                        <kbd> Ctrl + Shift + N </kbd>
+                    </div>
+                    <div class="shortcut" data-id="go-back">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Go Back </span>
+                        <kbd> Alt + ← </kbd>
+                    </div>
+                    <div class="shortcut" data-id="go-forward">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Go Forward </span>
+                        <kbd> Alt + → </kbd>
+                    </div>
+                    <div class="shortcut" data-id="parent-folder">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Parent Folder </span>
+                        <kbd> Alt + ↑ </kbd>
+                    </div>
+                    <div class="shortcut" data-id="delete">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Delete </span>
+                        <kbd> Delete </kbd>
+                    </div>
+                    <div class="shortcut" data-id="permanent-delete">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Permanent Delete </span>
+                        <kbd> Shift + Delete </kbd>
+                    </div>
+                    <div class="shortcut" data-id="select-range">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Select Range </span>
+                        <kbd> Shift + Click </kbd>
+                    </div>
+                    <div class="shortcut" data-id="select-multiple">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Select Multiple </span>
+                        <kbd> Ctrl + Click </kbd>
+                    </div>
+                </div>
+            </section>
+            <!-- =====================================
+                 CARD 7
+            ====================================== -->
+            <section class="card">
+                <h2>🖼️ Screenshots</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut" data-id="snipping-tool">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Snipping Tool </span>
+                        <kbd> Win + Shift + S </kbd>
+                    </div>
+                    <div class="shortcut" data-id="full-screen">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Full Screen </span>
+                        <kbd> PrtSc </kbd>
+                    </div>
+                    <div class="shortcut" data-id="active-window">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Active Window </span>
+                        <kbd> Alt + PrtSc </kbd>
+                    </div>
+                    <div class="shortcut" data-id="save-screenshot">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Save Screenshot </span>
+                        <kbd> Win + PrtSc </kbd>
+                    </div>
+                    <div class="shortcut" data-id="refresh">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Refresh </span>
+                        <kbd> F5 </kbd>
+                    </div>
+                    <div class="shortcut" data-id="reset-graphics">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Reset Graphics Driver </span>
+                        <kbd> Win + Ctrl + Shift + B </kbd>
+                    </div>
+                </div>
+            </section>
+            <!-- =====================================
+                 CARD 8
+            ====================================== -->
+            <section class="card">
+                <h2>🖥️ Virtual Desktop & More</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut" data-id="new-desktop">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> New Desktop </span>
+                        <kbd> Win + Ctrl + D </kbd>
+                    </div>
+                    <div class="shortcut" data-id="next-desktop">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Next Desktop </span>
+                        <kbd> Win + Ctrl + → </kbd>
+                    </div>
+                    <div class="shortcut" data-id="previous-desktop">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Previous Desktop </span>
+                        <kbd> Win + Ctrl + ← </kbd>
+                    </div>
+                    <div class="shortcut" data-id="close-desktop">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Close Desktop </span>
+                        <kbd> Win + Ctrl + F4 </kbd>
+                    </div>
+                    <div class="shortcut" data-id="change-language">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Change Language </span>
+                        <kbd> Win + Space </kbd>
+                    </div>
+                    <div class="shortcut" data-id="show-bookmarks">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Show Bookmarks </span>
+                        <kbd> Ctrl + Shift + B </kbd>
+                    </div>
+                    <div class="shortcut" data-id="clear-browser-data">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Clear Browser Data </span>
+                        <kbd> Ctrl + Shift + Delete </kbd>
+                    </div>
+                    <div class="shortcut" data-id="select-word">
+                        <input type="checkbox" class="check" />
+                        <span class="action"> Select Word </span>
+                        <kbd> Ctrl + Shift + ←/→ </kbd>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- =========================================
+         FOOTER
+    ========================================== -->
+    <footer>PC Shortcut Keys • Learn • Practice • Master</footer>
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+    <script>
+        /* =========================================
+           GET ELEMENTS
+        ========================================== */
+            const allShortcuts = document.querySelectorAll(".shortcut");
+            const progressText = document.getElementById("progressText");
+            const progressFill = document.getElementById("progressFill");
+            const importFile = document.getElementById("importFile");
+            /* =========================================
+           STORE ORIGINAL ORDER
+        ========================================== */
+            document.querySelectorAll(".shortcut-list").forEach((list) => {
+                Array.from(list.children).forEach((shortcut, index) => {
+                    shortcut.dataset.original = index;
+                });
+            });
+            /* =========================================
+           GET SHORTCUT ID
+        ========================================== */
+            function getShortcutId(shortcut) {
+                return shortcut.dataset.id;
+            }
+            /* =========================================
+           SAVE ONE SHORTCUT
+        ========================================== */
+            function saveShortcut(shortcut) {
+                const checkbox = shortcut.querySelector(".check");
+                const id = getShortcutId(shortcut);
+                localStorage.setItem("pc_shortcut_" + id, checkbox.checked);
+            }
+            /* =========================================
+           UPDATE VISUAL STATE
+        ========================================== */
+            function updateShortcutStyle(shortcut) {
+                const checkbox = shortcut.querySelector(".check");
+                if (checkbox.checked) {
+                    shortcut.classList.add("checked");
+                } else {
+                    shortcut.classList.remove("checked");
+                }
+            }
+            /* =========================================
+           SORT SHORTCUTS
+           CHECKED → TOP
+           UNCHECKED → BOTTOM
+           Original order is preserved
+           within each group.
+        ========================================== */
+            function sortShortcutList(list) {
+                const items = Array.from(list.children);
+                items.sort((a, b) => {
+                    const aChecked = a.querySelector(".check").checked;
+                    const bChecked = b.querySelector(".check").checked;
+                    /*
+                     Checked first
+                    */
+                    if (aChecked !== bChecked) {
+                        return Number(bChecked) - Number(aChecked);
+                    }
+                    /*
+                     Same state:
+                     keep original order
+                    */
+                    return Number(a.dataset.original) - Number(b.dataset.original);
+                });
+                items.forEach((item) => {
+                    list.appendChild(item);
+                });
+            }
+            /* =========================================
+           SORT ALL CARDS
+        ========================================== */
+            function sortAllShortcuts() {
+                document.querySelectorAll(".shortcut-list").forEach((list) => {
+                    sortShortcutList(list);
+                });
+            }
+            /* =========================================
+           CHECKBOX EVENTS
+        ========================================== */
+            allShortcuts.forEach((shortcut) => {
+                const checkbox = shortcut.querySelector(".check");
+                /*
+                 Load saved state
+                */
+                const saved = localStorage.getItem("pc_shortcut_" + getShortcutId(shortcut));
+                if (saved === "true") {
+                    checkbox.checked = true;
+                }
+                updateShortcutStyle(shortcut);
+                /*
+                 Checkbox changed
+                */
+                checkbox.addEventListener("change", () => {
+                    updateShortcutStyle(shortcut);
+                    saveShortcut(shortcut);
+                    sortAllShortcuts();
+                    updateProgress();
+                });
+            });
+            /* =========================================
+           UPDATE PROGRESS
+        ========================================== */
+            function updateProgress() {
+                const checkboxes = document.querySelectorAll(".check");
+                const total = checkboxes.length;
+                const known = document.querySelectorAll(".check:checked").length;
+                const percentage = total === 0 ? 0 : Math.round((known / total) * 100);
+                progressText.textContent = `${known} / ${total} (${percentage}%)`;
+                progressFill.style.width = percentage + "%";
+            }
+            /* =========================================
+           EXPORT PROGRESS
+        ========================================== */
+            function exportProgress() {
+                const progress = {
+                    version: 1,
+                    app: "PC Shortcut Keys",
+                    exportedAt: new Date().toISOString(),
+                    shortcuts: {},
+                };
+                allShortcuts.forEach((shortcut) => {
+                    const id = getShortcutId(shortcut);
+                    const checkbox = shortcut.querySelector(".check");
+                    progress.shortcuts[id] = checkbox.checked;
+                });
+                const json = JSON.stringify(progress, null, 2);
+                const blob = new Blob([json], {
+                    type: "application/json",
+                });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "pc-shortcut-progress.json";
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(url);
+            }
+            /* =========================================
+           IMPORT BUTTON
+        ========================================== */
+            function importProgress() {
+                importFile.click();
+            }
+            /* =========================================
+           IMPORT FILE
+        ========================================== */
+            importFile.addEventListener("change", (event) => {
+                const file = event.target.files[0];
+                if (!file) {
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function () {
+                    try {
+                        const data = JSON.parse(reader.result);
+                        /*
+                             Support the new format
+                            */
+                        let imported = null;
+                        if (data && data.shortcuts) {
+                            imported = data.shortcuts;
+                        } else if (data && typeof data === "object") {
+                        /*
+                             Also support the
+                             older simple format
+                            */
+                            imported = data;
+                        }
+                        if (!imported) {
+                            throw new Error("Invalid file");
+                        }
+                        let importedCount = 0;
+                        allShortcuts.forEach((shortcut) => {
+                            const id = getShortcutId(shortcut);
+                            const checkbox = shortcut.querySelector(".check");
+                            if (Object.prototype.hasOwnProperty.call(imported, id)) {
+                                checkbox.checked = imported[id] === true;
+                                importedCount++;
+                            }
+                            updateShortcutStyle(shortcut);
+                            saveShortcut(shortcut);
+                        });
+                        sortAllShortcuts();
+                        updateProgress();
+                        alert(`Progress imported successfully.\n\n${importedCount} shortcuts updated.`);
+                    } catch (error) {
+                        alert("Invalid progress file.\n\nPlease select a valid PC Shortcut Keys export file.");
+                    }
+                    /*
+                         Allows the same file to
+                         be selected again.
+                        */
+                    importFile.value = "";
+                };
+                reader.readAsText(file);
+            });
+            /* =========================================
+           RESET PROGRESS
+        ========================================== */
+            function resetProgress() {
+                const confirmed = confirm("Reset all shortcut progress?");
+                if (!confirmed) {
+                    return;
+                }
+                allShortcuts.forEach((shortcut) => {
+                    const checkbox = shortcut.querySelector(".check");
+                    const id = getShortcutId(shortcut);
+                    checkbox.checked = false;
+                    shortcut.classList.remove("checked");
+                    localStorage.removeItem("pc_shortcut_" + id);
+                });
+                /*
+             Restore original order.
+            */
+                document.querySelectorAll(".shortcut-list").forEach((list) => {
+                    const items = Array.from(list.children);
+                    items.sort((a, b) => {
+                        return Number(a.dataset.original) - Number(b.dataset.original);
+                    });
+                    items.forEach((item) => {
+                        list.appendChild(item);
+                    });
+                });
+                updateProgress();
+            }
+            /* =========================================
+           INITIAL SORT
+        ========================================== */
+            sortAllShortcuts();
+            /* =========================================
+           INITIAL PROGRESS
+        ========================================== */
+            updateProgress();
+    </script>
+</body>
+</html>
