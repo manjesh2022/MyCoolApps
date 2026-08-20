@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mathematical Reference Guide</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔢</text></svg>">
+
+<style>
+
+:root {
+    --bg-color: #0b0f19;
+    --card-bg: #111827;
+    --text-color: #e5e7eb;
+    --text-muted: #9ca3af;
+    --accent-color: #8b5cf6;
+    --accent-hover: #7c3aed;
+    --border-color: #1f2937;
+    --table-header: #151c2c;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+
+/* =========================================================
+   FIXED HEADER
+   ========================================================= */
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background: rgba(11, 15, 25, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 18px;
+}
+
+.header-inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+.tabs-nav {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 0;
+    background: var(--card-bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background: #1a2234;
+    color: var(--text-color);
+}
+
+.tab-btn.active {
+    background: var(--accent-color);
+    color: #ffffff;
+    border-color: var(--accent-color);
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.container {
+    width: 100%;
+    padding: 14px 18px;
+}
+
+
+/* =========================================================
+   TAB CONTENT
+   ========================================================= */
+
+.tab-content {
+    display: none;
+    width: 100%;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+
+/* =========================================================
+   UNIFORM TABLES
+   ========================================================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+th,
+td {
+    padding: 6px 10px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+th {
+    background: var(--table-header);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+tr:hover {
+    background: rgba(139, 92, 246, 0.06);
+}
+
+
+/* =========================================================
+   FULL MULTIPLICATION GRID CONTAINER
+   ========================================================= */
+
+/* Forces 10 columns always, scaling down only on genuinely small mobile screens */
+.multiplication-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+}
+
+@media (max-width: 1200px) {
+    .multiplication-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .multiplication-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 400px) {
+    .multiplication-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.multi-table-wrap {
+    background: #0b0f19;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.multi-table-wrap table {
+    font-size: 0.75rem;
+}
+
+.multi-table-wrap td {
+    padding: 3px 6px;
+    text-align: left;
+    font-family: monospace;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <h1>Math Guide</h1>
+        <nav class="tabs-nav">
+            <button class="tab-btn active" onclick="openTab(event,'squares')">Squares</button>
+            <button class="tab-btn" onclick="openTab(event,'cubes')">Cubes</button>
+            <button class="tab-btn" onclick="openTab(event,'factorials')">Factorials</button>
+            <button class="tab-btn" onclick="openTab(event,'fractions')">Fractions & %</button>
+            <button class="tab-btn" onclick="openTab(event,'multiplication')">Multiplication</button>
+            <button class="tab-btn" onclick="openTab(event,'triples')">Pythagorean Triples</button>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+<!-- SQUARES -->
+<div id="squares" class="tab-content active">
+<table>
+<thead>
+<tr>
+<th>Number</th><th>Square</th>
+<th>Number</th><th>Square</th>
+<th>Number</th><th>Square</th>
+<th>Number</th><th>Square</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1²</td><td>1</td><td>11²</td><td>121</td><td>21²</td><td>441</td><td>31²</td><td>961</td></tr>
+<tr><td>2²</td><td>4</td><td>12²</td><td>144</td><td>22²</td><td>484</td><td>32²</td><td>1024</td></tr>
+<tr><td>3²</td><td>9</td><td>13²</td><td>169</td><td>23²</td><td>529</td><td>33²</td><td>1089</td></tr>
+<tr><td>4²</td><td>16</td><td>14²</td><td>196</td><td>24²</td><td>576</td><td>34²</td><td>1156</td></tr>
+<tr><td>5²</td><td>25</td><td>15²</td><td>225</td><td>25²</td><td>625</td><td>35²</td><td>1225</td></tr>
+<tr><td>6²</td><td>36</td><td>16²</td><td>256</td><td>26²</td><td>676</td><td>36²</td><td>1296</td></tr>
+<tr><td>7²</td><td>49</td><td>17²</td><td>289</td><td>27²</td><td>729</td><td>37²</td><td>1369</td></tr>
+<tr><td>8²</td><td>64</td><td>18²</td><td>324</td><td>28²</td><td>784</td><td>38²</td><td>1444</td></tr>
+<tr><td>9²</td><td>81</td><td>19²</td><td>361</td><td>29²</td><td>841</td><td>39²</td><td>1521</td></tr>
+<tr><td>10²</td><td>100</td><td>20²</td><td>400</td><td>30²</td><td>900</td><td>40²</td><td>1600</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- CUBES -->
+<div id="cubes" class="tab-content">
+<table>
+<thead>
+<tr>
+<th>Number</th><th>Cube</th>
+<th>Number</th><th>Cube</th>
+<th>Number</th><th>Cube</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1³</td><td>1</td><td>11³</td><td>1331</td><td>21³</td><td>9261</td></tr>
+<tr><td>2³</td><td>8</td><td>12³</td><td>1728</td><td>22³</td><td>10648</td></tr>
+<tr><td>3³</td><td>27</td><td>13³</td><td>2197</td><td>23³</td><td>12167</td></tr>
+<tr><td>4³</td><td>64</td><td>14³</td><td>2744</td><td>24³</td><td>13824</td></tr>
+<tr><td>5³</td><td>125</td><td>15³</td><td>3375</td><td>25³</td><td>15625</td></tr>
+<tr><td>6³</td><td>216</td><td>16³</td><td>4096</td><td>26³</td><td>17576</td></tr>
+<tr><td>7³</td><td>343</td><td>17³</td><td>4913</td><td>27³</td><td>19683</td></tr>
+<tr><td>8³</td><td>512</td><td>18³</td><td>5832</td><td>28³</td><td>21952</td></tr>
+<tr><td>9³</td><td>729</td><td>19³</td><td>6859</td><td>29³</td><td>24389</td></tr>
+<tr><td>10³</td><td>1000</td><td>20³</td><td>8000</td><td>30³</td><td>27000</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- FACTORIALS -->
+<div id="factorials" class="tab-content">
+<table>
+<thead>
+<tr>
+<th>n</th>
+<th>n!</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>0</td><td>1</td></tr>
+<tr><td>1</td><td>1</td></tr>
+<tr><td>2</td><td>2</td></tr>
+<tr><td>3</td><td>6</td></tr>
+<tr><td>4</td><td>24</td></tr>
+<tr><td>5</td><td>120</td></tr>
+<tr><td>6</td><td>720</td></tr>
+<tr><td>7</td><td>5,040</td></tr>
+<tr><td>8</td><td>40,320</td></tr>
+<tr><td>9</td><td>362,880</td></tr>
+<tr><td>10</td><td>3,628,800</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- FRACTIONS -->
+<div id="fractions" class="tab-content">
+<table>
+<thead>
+<tr>
+<th>Fraction</th><th>Fractional %</th><th>Decimal %</th>
+<th>Fraction</th><th>Fractional %</th><th>Decimal %</th>
+<th>Fraction</th><th>Fractional %</th><th>Decimal %</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>100%</td><td>100%</td><td>1/11</td><td>9 1/11%</td><td>9.09%</td><td>1/21</td><td>4 16/21%</td><td>4.76%</td></tr>
+<tr><td>1/2</td><td>50%</td><td>50%</td><td>1/12</td><td>8 1/3%</td><td>8.33%</td><td>1/22</td><td>4 6/11%</td><td>4.54%</td></tr>
+<tr><td>1/3</td><td>33 1/3%</td><td>33.33%</td><td>1/13</td><td>7 9/13%</td><td>7.69%</td><td>1/23</td><td>4 8/23%</td><td>4.34%</td></tr>
+<tr><td>1/4</td><td>25%</td><td>25%</td><td>1/14</td><td>7 1/7%</td><td>7.14%</td><td>1/24</td><td>4 1/6%</td><td>4.16%</td></tr>
+<tr><td>1/5</td><td>20%</td><td>20%</td><td>1/15</td><td>6 2/3%</td><td>6.66%</td><td>1/25</td><td>4%</td><td>4%</td></tr>
+<tr><td>1/6</td><td>16 2/3%</td><td>16.67%</td><td>1/16</td><td>6 1/4%</td><td>6.25%</td><td>1/30</td><td>3 1/3%</td><td>3.33%</td></tr>
+<tr><td>1/7</td><td>14 2/7%</td><td>14.28%</td><td>1/17</td><td>5 15/17%</td><td>5.88%</td><td>1/40</td><td>2 1/2%</td><td>2.5%</td></tr>
+<tr><td>1/8</td><td>12 1/2%</td><td>12.5%</td><td>1/18</td><td>5 5/9%</td><td>5.55%</td><td>1/50</td><td>2%</td><td>2%</td></tr>
+<tr><td>1/9</td><td>11 1/9%</td><td>11.11%</td><td>1/19</td><td>5 5/19%</td><td>5.26%</td><td>1/60</td><td>1 2/3%</td><td>1.67%</td></tr>
+<tr><td>1/10</td><td>10%</td><td>10%</td><td>1/20</td><td>5%</td><td>5%</td><td>1/70</td><td>1 3/7%</td><td>1.43%</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- MULTIPLICATION -->
+<div id="multiplication" class="tab-content">
+<div class="multiplication-grid" id="multiplicationContainer"></div>
+</div>
+
+<!-- PYTHAGOREAN TRIPLES -->
+<div id="triples" class="tab-content">
+<table>
+<thead>
+<tr>
+<th>Triple</th>
+<th>Triple</th>
+<th>Triple</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>(3, 4, 5)</td><td>(5, 12, 13)</td><td>(7, 24, 25)</td></tr>
+<tr><td>(8, 15, 17)</td><td>(9, 40, 41)</td><td>(11, 60, 61)</td></tr>
+<tr><td>(12, 35, 37)</td><td>(13, 84, 85)</td><td>(15, 112, 113)</td></tr>
+<tr><td>(16, 63, 65)</td><td>(17, 144, 145)</td><td>(19, 180, 181)</td></tr>
+<tr><td>(20, 21, 29)</td><td>(20, 99, 101)</td><td>(21, 220, 221)</td></tr>
+<tr><td>(60, 221, 229)</td><td>(105, 208, 233)</td><td>(120, 209, 241)</td></tr>
+<tr><td>(23, 264, 265)</td><td>(96, 247, 265)</td><td>(69, 260, 269)</td></tr>
+</tbody>
+</table>
+</div>
+
+</main>
+
+<script>
+function openTab(evt, tabName) {
+    const contents = document.getElementsByClassName("tab-content");
+    for (let i = 0; i < contents.length; i++) {
+        contents[i].classList.remove("active");
+    }
+
+    const buttons = document.getElementsByClassName("tab-btn");
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+}
+
+const container = document.getElementById("multiplicationContainer");
+
+for (let number = 11; number <= 30; number++) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "multi-table-wrap";
+
+    let tableHTML = `<table>
+        <tbody>`;
+
+    for (let multiplier = 1; multiplier <= 12; multiplier++) {
+        tableHTML += `<tr><td>${number} × ${multiplier} = ${number * multiplier}</td></tr>`;
+    }
+
+    tableHTML += `</tbody></table>`;
+    wrapper.innerHTML = tableHTML;
+    container.appendChild(wrapper);
+}
+</script>
+
+</body>
+</html>
