@@ -235,7 +235,10 @@ a {
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('dashboard', event)">🏠 Dashboard</button>
             <button class="tab-btn" onclick="switchTab('n5', event)">5️⃣ N5</button>
+            <button class="tab-btn" onclick="switchTab('n4', event)">4️⃣ N4</button>
+            <button class="tab-btn" onclick="switchTab('n3', event)">3️⃣ N3</button>
             <button class="tab-btn" onclick="switchTab('n2', event)">2️⃣ N2</button>
+            <button class="tab-btn" onclick="switchTab('n1', event)">1️⃣ N1</button>
             <button class="tab-btn" onclick="switchTab('meet', event)">💻 Meet</button>
             <button class="tab-btn" onclick="switchTab('whiteboard', event)">📝 Board</button>
             <button class="tab-btn" onclick="switchTab('spinwheel', event)">🎡 Wheel</button>
@@ -273,11 +276,44 @@ a {
         </div>
     </div>
 
+    <!-- ================= N4 ================= -->
+    <div id="n4" class="tab-content">
+        <h2 class="section-title">JLPT N4 Resources</h2>
+        <div class="grid" data-tab="n4">
+            <div class="card add-card" onclick="addNewCard('n4')">
+                <div class="icon">➕</div>
+                <div>Add Link</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= N3 ================= -->
+    <div id="n3" class="tab-content">
+        <h2 class="section-title">JLPT N3 Resources</h2>
+        <div class="grid" data-tab="n3">
+            <div class="card add-card" onclick="addNewCard('n3')">
+                <div class="icon">➕</div>
+                <div>Add Link</div>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= N2 ================= -->
     <div id="n2" class="tab-content">
         <h2 class="section-title">JLPT N2 Resources</h2>
         <div class="grid" data-tab="n2">
             <div class="card add-card" onclick="addNewCard('n2')">
+                <div class="icon">➕</div>
+                <div>Add Link</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= N1 ================= -->
+    <div id="n1" class="tab-content">
+        <h2 class="section-title">JLPT N1 Resources</h2>
+        <div class="grid" data-tab="n1">
+            <div class="card add-card" onclick="addNewCard('n1')">
                 <div class="icon">➕</div>
                 <div>Add Link</div>
             </div>
