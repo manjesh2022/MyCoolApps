@@ -243,6 +243,7 @@ a {
             <button class="tab-btn" onclick="switchTab('whiteboard', event)">📝 Board</button>
             <button class="tab-btn" onclick="switchTab('spinwheel', event)">🎡 Wheel</button>
             <button class="tab-btn" onclick="switchTab('flashcard', event)">🔁 Cards</button>
+            <button class="tab-btn" onclick="switchTab('ppt', event)">🖥 PPT</button>
             <button class="tab-btn" onclick="switchTab('notes', event)">☁️ Notes</button>
         </div>
         
@@ -358,6 +359,17 @@ a {
         <h2 class="section-title">Flashcard</h2>
         <div class="grid" data-tab="flashcard">
             <div class="card add-card" onclick="addNewCard('flashcard')">
+                <div class="icon">➕</div>
+                <div>Add Link</div>
+            </div>
+        </div>
+    </div>
+
+   <!-- ================= PPT ================= -->
+    <div id="ppt" class="tab-content">
+        <h2 class="section-title">PPT</h2>
+        <div class="grid" data-tab="ppt">
+            <div class="card add-card" onclick="addNewCard('ppt')">
                 <div class="icon">➕</div>
                 <div>Add Link</div>
             </div>
