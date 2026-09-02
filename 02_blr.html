@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bangalore - Explore the Garden City (Table & Grid View)</title>
+    <title>Bangalore - Explore the Garden City (Grid View)</title>
     <link rel="icon" href="0favicon/blr.png" type="image/png" />
     <style>
         body {
@@ -28,11 +28,20 @@
             border-bottom: 1px solid #333;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            box-sizing: border-box;
+        }
+
+        .header-top {
+            display: flex;
             align-items: center;
             justify-content: space-around;
+            width: 100%;
             flex-wrap: wrap;
-            gap: 15px;
-            box-sizing: border-box;
+            gap: 12px;
+            max-width: 1100px;
         }
 
         header h1 {
@@ -44,23 +53,26 @@
         .header-controls {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
-        #searchInput {
-            padding: 8px 16px;
-            width: 220px;
+        #searchInput, #sortSelect {
+            padding: 7px 14px;
             border-radius: 20px;
             border: 1px solid #444;
             background-color: #1a1a1a;
             color: #ff7e8f;
             outline: none;
-            font-size: 14px;
+            font-size: 13px;
             transition: border-color 0.3s;
         }
 
-        #searchInput:focus {
+        #searchInput {
+            width: 170px;
+        }
+
+        #searchInput:focus, #sortSelect:focus {
             border-color: #ff7e8f;
         }
 
@@ -68,13 +80,39 @@
             color: #888;
         }
 
-        /* Stats Counter Badge with Fixed Width for numbers to prevent layout shift */
+        .action-btn {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            color: #ffb6c1;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .action-btn:hover {
+            background-color: #ff7e8f;
+            color: #121212;
+            border-color: #ff7e8f;
+        }
+
+        /* Stats Counter & Progress Bar Wrapper */
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
         .stats-badge {
             background-color: #1a1a1a;
             border: 1px solid #444;
             border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 13px;
+            padding: 5px 12px;
+            font-size: 12px;
             color: #a7f3d0;
             font-weight: 600;
             white-space: nowrap;
@@ -87,33 +125,55 @@
             display: inline-block;
             text-align: right;
             font-variant-numeric: tabular-nums;
-            width: 22px; /* Fixed width prevents shifting when digits change */
+            width: 20px;
             color: #34d399;
         }
 
-        /* View Toggle Switch / Buttons */
-        .view-toggle {
-            display: flex;
-            background-color: #1a1a1a;
-            border: 1px solid #444;
-            border-radius: 20px;
+        .progress-bar-track {
+            width: 110px;
+            height: 5px;
+            background-color: #2d2d2d;
+            border-radius: 3px;
             overflow: hidden;
         }
 
-        .view-btn {
-            background: transparent;
-            border: none;
-            color: #888;
-            padding: 6px 14px;
-            font-size: 13px;
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #10b981;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Region Filter Pills */
+        .region-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1100px;
+        }
+
+        .filter-pill {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            color: #aaa;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 600;
         }
 
-        .view-btn.active {
+        .filter-pill:hover {
+            border-color: #ff7e8f;
+            color: #ffb6c1;
+        }
+
+        .filter-pill.active {
             background-color: #ff7e8f;
             color: #121212;
+            border-color: #ff7e8f;
         }
 
         footer {
@@ -136,102 +196,91 @@
 
         .main-container {
             max-width: 1100px;
-            height: calc(100vh - 170px);
-            margin: 85px auto 65px;
+            height: calc(100vh - 195px);
+            margin: 110px auto 65px;
             padding: 0 20px;
             overflow-y: auto;
             overflow-x: auto;
         }
 
-        /* Table View Styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: transparent;
+        /* Grid View Styles (Cards) */
+        #gridViewContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            padding-bottom: 20px;
         }
 
-        thead th {
-            position: sticky;
-            top: 0;
-            background-color: #1a1a1a;
-            color: #ff7e8f;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 14px 18px;
-            text-align: left;
-            border-bottom: 2px solid #ff7e8f;
-            cursor: pointer;
-            user-select: none;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            transition: background-color 0.2s;
-        }
-
-        thead th:hover {
-            background-color: #282828;
-            color: #ffb6c1;
-        }
-
-        th span.sort-indicator {
-            font-size: 11px;
-            margin-left: 6px;
-            color: #888;
-        }
-
-        tr.place-row {
+        .place-card {
             background-color: #1e1e1e;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, background-color 0.2s;
+            border: 1px solid #2d2d2d;
+            position: relative;
         }
 
-        tr.place-row td {
-            border-bottom: 8px solid #121212; 
-        }
-
-        tr.place-row:hover {
+        .place-card:hover {
             background-color: #262626;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
         }
 
-        td {
-            padding: 14px 18px;
-            color: #d1d5db;
-            font-size: 14px;
-            vertical-align: middle;
-            background-color: #1e1e1e;
+        .place-card .card-content {
+            margin-bottom: 12px;
         }
 
-        td:first-child {
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
+        .place-card .card-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
         }
 
-        td:last-child {
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
-
-        .place-link {
+        .place-card .card-title {
+            font-size: 16px;
+            font-weight: 600;
             color: #ffb6c1;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            transition: color 0.2s;
+            display: inline-block;
         }
 
-        .place-link:hover {
+        .place-card .card-title:hover {
             color: #ff7e8f;
             text-decoration: underline;
         }
 
-        .address-text {
-            color: #9ca3af;
-            font-size: 13px;
+        .region-tag {
+            font-size: 10px;
+            background-color: #282828;
+            color: #ff7e8f;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
-        td.checkbox-cell {
-            text-align: center;
+        .place-card .card-address {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+
+        .place-card .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #2d2d2d;
+            padding-top: 10px;
+            font-size: 12px;
+            color: #888;
         }
 
         .visit-checkbox {
@@ -262,84 +311,6 @@
             font-weight: bold;
         }
 
-        tr.visited td {
-            background-color: #0d231a !important;
-            color: #6ee7b7;
-        }
-
-        tr.visited .place-link {
-            color: #34d399;
-        }
-
-        tr.visited .address-text {
-            color: #4ade80;
-        }
-
-        tr.visited .visit-checkbox {
-            border-color: #34d399;
-        }
-
-        /* Grid View Styles (Cards) */
-        #gridViewContainer {
-            display: none;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            padding-bottom: 20px;
-        }
-
-        .place-card {
-            background-color: #1e1e1e;
-            border-radius: 10px;
-            padding: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s, background-color 0.2s;
-            border: 1px solid #2d2d2d;
-            position: relative;
-        }
-
-        .place-card:hover {
-            background-color: #262626;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
-        }
-
-        .place-card .card-content {
-            margin-bottom: 12px;
-        }
-
-        .place-card .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #ffb6c1;
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-
-        .place-card .card-title:hover {
-            color: #ff7e8f;
-            text-decoration: underline;
-        }
-
-        .place-card .card-address {
-            font-size: 13px;
-            color: #9ca3af;
-            line-height: 1.4;
-        }
-
-        .place-card .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #2d2d2d;
-            padding-top: 10px;
-            font-size: 12px;
-            color: #888;
-        }
-
         .place-card.visited {
             background-color: #0d231a !important;
             border-color: #059669;
@@ -353,8 +324,119 @@
             color: #4ade80;
         }
 
+        .place-card.visited .region-tag {
+            background-color: #064e3b;
+            color: #6ee7b7;
+            border-color: #059669;
+        }
+
         .place-card.visited .visit-checkbox {
             border-color: #34d399;
+        }
+
+        /* Modal Overlays */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: #ff7e8f;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #121212;
+            color: #e0e0e0;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #ff7e8f;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .modal-btn.cancel {
+            background-color: #333;
+            color: #ccc;
+        }
+
+        .modal-btn.cancel:hover {
+            background-color: #444;
+        }
+
+        .modal-btn.submit {
+            background-color: #ff7e8f;
+            color: #121212;
+        }
+
+        .modal-btn.submit:hover {
+            background-color: #ffb6c1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: #888;
+            display: none;
+        }
+
+        .empty-state h3 {
+            color: #ffb6c1;
+            margin-bottom: 8px;
         }
 
         /* Custom Scrollbar */
@@ -377,48 +459,72 @@
 <body>
 
     <header>
-        <h1>Explore Bangalore</h1>
-        <div class="header-controls">
-            <input type="text" id="searchInput" onkeyup="filterPlaces()" placeholder="Search places, addresses..." aria-label="Search places">
-            <div class="stats-badge">
-                Visited: <span id="visitedCount" class="count-display">0</span>/<span id="totalCount" class="count-display">0</span>
+        <div class="header-top">
+            <h1>Explore Bangalore</h1>
+            <div class="header-controls">
+                <input type="text" id="searchInput" oninput="applyFiltersAndSort()" placeholder="Search places..." aria-label="Search places">
+                <select id="sortSelect" onchange="applyFiltersAndSort()" aria-label="Sort options">
+                    <option value="default">Default Order</option>
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="unvisited">Unvisited First</option>
+                </select>
+                <button type="button" class="action-btn" onclick="openAddModal()">+ Add Place</button>
+                <button type="button" class="action-btn" onclick="exportData()">Export</button>
+                <button type="button" class="action-btn" onclick="triggerImport()">Import</button>
+                <button type="button" class="action-btn" onclick="resetData()">Reset</button>
+                <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(event)">
+                
+                <div class="stats-container">
+                    <div class="stats-badge">
+                        Visited: <span id="visitedCount" class="count-display">0</span>/<span id="totalCount" class="count-display">0</span>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div id="progressBarFill" class="progress-bar-fill"></div>
+                    </div>
+                </div>
             </div>
-            <div class="view-toggle">
-                <button type="button" id="tableViewBtn" class="view-btn active" onclick="switchView('table')">Table</button>
-                <button type="button" id="gridViewBtn" class="view-btn" onclick="switchView('grid')">Grid</button>
-            </div>
+        </div>
+        <div class="region-filters" id="regionFilters">
+            <!-- Dynamic region pills generated via JS -->
         </div>
     </header>
 
     <div class="main-container">
-        <!-- Table View Container -->
-        <div id="tableViewContainer">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 35%;" onclick="sortTable('name')">Place / Attraction <span id="sort-name" class="sort-indicator">↕</span></th>
-                        <th style="width: 50%;" onclick="sortTable('address')">Address <span id="sort-address" class="sort-indicator">↕</span></th>
-                        <th style="width: 15%; text-align: center;" onclick="sortTable('visited')">Visited <span id="sort-visited" class="sort-indicator">↕</span></th>
-                    </tr>
-                </thead>
-                <tbody id="placesTableBody">
-                    <!-- Populated dynamically via script below -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Grid View Container -->
         <div id="gridViewContainer">
             <!-- Populated dynamically via script below -->
+            <div id="emptyState" class="empty-state">
+                <h3>No destinations found</h3>
+                <p>Try tweaking your search term or region filter.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Place Modal -->
+    <div id="addModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Add New Destination</h3>
+            <div class="form-group">
+                <label for="newPlaceName">Place Name</label>
+                <input type="text" id="newPlaceName" placeholder="e.g., HAL Heritage Centre">
+            </div>
+            <div class="form-group">
+                <label for="newPlaceAddress">Full Address / Location</label>
+                <textarea id="newPlaceAddress" rows="3" placeholder="e.g., Old Airport Road, Bengaluru, Karnataka"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="modal-btn cancel" onclick="closeAddModal()">Cancel</button>
+                <button type="button" class="modal-btn submit" onclick="saveNewPlace()">Save Place</button>
+            </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Explore Bangalore - Multi-View Edition</p>
+        <p>&copy; 2026 Explore Bangalore - Custom Edition</p>
     </footer>
 
     <script>
-        const placesData = [
+        const defaultPlacesData = [
             { name: "Shivanasamudra Falls", address: "Malavalli Taluk, Mandya District, Karnataka, India" },
             { name: "ISKCON Vaikuntha Hill", address: "12th Main Road, Vaikunta Hill, Vasanthapura, Uttarahalli Hobli, Bengaluru, Karnataka 560061" },
             { name: "Cubbon Park", address: "Kasturba Road, Behind High Court of Karnataka, Sampangi Rama Nagar, Bengaluru, Karnataka 560001" },
@@ -480,244 +586,100 @@
             { name: "BLR Brewing Co.", address: "7th Cross Road, Industrial Area, 5th Block, Koramangala, Bengaluru, Karnataka 560095" }
         ];
 
-        let currentSortCol = '';
-        let currentSortAsc = true;
-        let currentView = 'table';
+        let placesData = JSON.parse(localStorage.getItem('customPlacesList')) || defaultPlacesData;
+        let selectedRegion = 'All';
 
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById('totalCount').textContent = placesData.length;
-            renderElements();
-            initializeInteraction();
-            applyFilterAndSort();
+            buildRegionFilters();
+            renderCards();
+            updateStats();
         });
 
-        function renderElements() {
-            let tbody = document.getElementById('placesTableBody');
+        function getRegion(address) {
+			let lower = address.toLowerCase();
+			if (lower.includes('mandya')) return 'Mandya';
+			if (lower.includes('mysuru') || lower.includes('mysore')) return 'Mysore';
+			if (lower.includes('ramanagara') || lower.includes('channapatna')) return 'Ramanagara';
+			if (lower.includes('chikkaballapur') || lower.includes('nandi')) return 'Chikkaballapur';
+			if (lower.includes('kollegal') || lower.includes('chamarajanagar')) return 'Kollegal';
+			return 'Bangalore'; 
+		}
+
+        function buildRegionFilters() {
+			let regions = ['All', 'Bangalore', 'Mandya', 'Mysore', 'Ramanagara', 'Chikkaballapur', 'Kollegal'];
+			let container = document.getElementById('regionFilters');
+			let html = '';
+
+			regions.forEach(reg => {
+				let activeClass = reg === selectedRegion ? 'active' : '';
+				html += `<button class="filter-pill ${activeClass}" onclick="setRegion('${reg}')">${reg}</button>`;
+			});
+
+			container.innerHTML = html;
+		}
+
+        function setRegion(region) {
+            selectedRegion = region;
+            buildRegionFilters();
+            applyFiltersAndSort();
+        }
+
+        function renderCards() {
+            document.getElementById('totalCount').textContent = placesData.length;
             let gridContainer = document.getElementById('gridViewContainer');
-            
-            let tableHtml = '';
-            let gridHtml = '';
+            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_gridview')) || {};
+            let cardsHtml = '';
 
             placesData.forEach((item, index) => {
                 let mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(item.name + ', ' + item.address)}`;
-                
-                tableHtml += `
-                    <tr class="place-row" data-index="${index}" data-name="${item.name.toLowerCase()}" data-address="${item.address.toLowerCase()}">
-                        <td><a class="place-link" href="${mapUrl}" target="_blank">${item.name}</a></td>
-                        <td class="address-text">${item.address}</td>
-                        <td class="checkbox-cell"><input type="checkbox" class="visit-checkbox" title="Mark as visited"></td>
-                    </tr>
-                `;
+                let isVisited = !!visitedData[item.name.toLowerCase()];
+                let region = getRegion(item.address);
 
-                gridHtml += `
-                    <div class="place-card" data-index="${index}" data-name="${item.name.toLowerCase()}" data-address="${item.address.toLowerCase()}">
+                cardsHtml += `
+                    <div class="place-card ${isVisited ? 'visited' : ''}" 
+                         data-index="${index}" 
+                         data-name="${item.name.toLowerCase()}" 
+                         data-address="${item.address.toLowerCase()}"
+                         data-region="${region}">
                         <div class="card-content">
-                            <a class="card-title" href="${mapUrl}" target="_blank">${item.name}</a>
+                            <div class="card-top-row">
+                                <a class="card-title" href="${mapUrl}" target="_blank">${item.name}</a>
+                                <span class="region-tag">${region}</span>
+                            </div>
                             <div class="card-address">${item.address}</div>
                         </div>
                         <div class="card-footer">
                             <span>Visited</span>
-                            <input type="checkbox" class="visit-checkbox" title="Mark as visited">
+                            <input type="checkbox" class="visit-checkbox" ${isVisited ? 'checked' : ''} onchange="updateVisitedState(${index}, this.checked)" title="Mark as visited">
                         </div>
                     </div>
                 `;
             });
 
-            tbody.innerHTML = tableHtml;
-            gridContainer.innerHTML = gridHtml;
+            cardsHtml += `
+                <div id="emptyState" class="empty-state">
+                    <h3>No destinations found</h3>
+                    <p>Try tweaking your search term or region filter.</p>
+                </div>
+            `;
+
+            gridContainer.innerHTML = cardsHtml;
+            applyFiltersAndSort();
         }
 
-        function switchView(viewType) {
-            currentView = viewType;
-            let tableCont = document.getElementById('tableViewContainer');
-            let gridCont = document.getElementById('gridViewContainer');
-            let tableBtn = document.getElementById('tableViewBtn');
-            let gridBtn = document.getElementById('gridViewBtn');
-
-            if (viewType === 'table') {
-                tableCont.style.display = 'block';
-                gridCont.style.display = 'none';
-                tableBtn.classList.add('active');
-                gridBtn.classList.remove('active');
-            } else {
-                tableCont.style.display = 'none';
-                gridCont.style.display = 'grid';
-                gridBtn.classList.add('active');
-                tableBtn.classList.remove('active');
-            }
-        }
-
-        function updateVisitedCount() {
-            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_multiview')) || {};
+        function updateStats() {
+            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_gridview')) || {};
             let count = Object.keys(visitedData).length;
+            let total = placesData.length;
+            
             document.getElementById('visitedCount').textContent = count;
-        }
-
-        function initializeInteraction() {
-            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_multiview')) || {};
-            updateVisitedCount();
-
-            let rows = document.querySelectorAll('.place-row');
-            let cards = document.querySelectorAll('.place-card');
-
-            function handleCheckChange(index, isChecked) {
-                let placeName = placesData[index].name.toLowerCase();
-                
-                if (isChecked) {
-                    visitedData[placeName] = true;
-                } else {
-                    delete visitedData[placeName];
-                }
-                localStorage.setItem('visitedPlaces_multiview', JSON.stringify(visitedData));
-                updateVisitedCount();
-
-                document.querySelectorAll(`[data-index="${index}"]`).forEach(el => {
-                    let checkbox = el.querySelector('.visit-checkbox');
-                    if (isChecked) {
-                        el.classList.add('visited');
-                        if (checkbox) checkbox.checked = true;
-                    } else {
-                        el.classList.remove('visited');
-                        if (checkbox) checkbox.checked = false;
-                    }
-                });
-            }
-
-            rows.forEach(row => {
-                let idx = row.getAttribute('data-index');
-                let placeName = placesData[idx].name.toLowerCase();
-                let checkbox = row.querySelector('.visit-checkbox');
-
-                if (visitedData[placeName]) {
-                    row.classList.add('visited');
-                    checkbox.checked = true;
-                }
-
-                checkbox.addEventListener('change', function() {
-                    handleCheckChange(idx, this.checked);
-                });
-            });
-
-            cards.forEach(card => {
-                let idx = card.getAttribute('data-index');
-                let placeName = placesData[idx].name.toLowerCase();
-                let checkbox = card.querySelector('.visit-checkbox');
-
-                if (visitedData[placeName]) {
-                    card.classList.add('visited');
-                    checkbox.checked = true;
-                }
-
-                checkbox.addEventListener('change', function() {
-                    handleCheckChange(idx, this.checked);
-                });
-            });
-        }
-
-        function sortTable(column) {
-            if (currentSortCol === column) {
-                currentSortAsc = !currentSortAsc;
-            } else {
-                currentSortCol = column;
-                currentSortAsc = true;
-            }
-
-            document.querySelectorAll('.sort-indicator').forEach(el => el.textContent = '↕');
-            let indicator = document.getElementById(`sort-${column}`);
-            if (indicator) {
-                indicator.textContent = currentSortAsc ? '▲' : '▼';
-            }
-
-            applyFilterAndSort();
-        }
-
-        function applyFilterAndSort() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_multiview')) || {};
-            updateVisitedCount();
-
-            let indices = Array.from({ length: placesData.length }, (_, i) => i);
-
-            indices.sort((iA, iB) => {
-                if (!currentSortCol) return 0;
-                let itemA = placesData[iA];
-                let itemB = placesData[iB];
-
-                let valA, valB;
-                if (currentSortCol === 'name') {
-                    valA = itemA.name.toLowerCase();
-                    valB = itemB.name.toLowerCase();
-                } else if (currentSortCol === 'address') {
-                    valA = itemA.address.toLowerCase();
-                    valB = itemB.address.toLowerCase();
-                } else if (currentSortCol === 'visited') {
-                    valA = visitedData[itemA.name.toLowerCase()] ? 1 : 0;
-                    valB = visitedData[itemB.name.toLowerCase()] ? 1 : 0;
-                }
-
-                if (valA < valB) return currentSortAsc ? -1 : 1;
-                if (valA > valB) return currentSortAsc ? 1 : -1;
-                return 0;
-            });
-
-            let tbody = document.getElementById('placesTableBody');
-            let gridContainer = document.getElementById('gridViewContainer');
-
-            tbody.innerHTML = '';
-            gridContainer.innerHTML = '';
-
-            indices.forEach(idx => {
-                let item = placesData[idx];
-                let mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(item.name + ', ' + item.address)}`;
-                let isVisited = !!visitedData[item.name.toLowerCase()];
-
-                let tr = document.createElement('tr');
-                tr.className = `place-row ${isVisited ? 'visited' : ''}`;
-                tr.setAttribute('data-index', idx);
-                tr.setAttribute('data-name', item.name.toLowerCase());
-                tr.setAttribute('data-address', item.address.toLowerCase());
-                tr.innerHTML = `
-                    <td><a class="place-link" href="${mapUrl}" target="_blank">${item.name}</a></td>
-                    <td class="address-text">${item.address}</td>
-                    <td class="checkbox-cell"><input type="checkbox" class="visit-checkbox" ${isVisited ? 'checked' : ''} title="Mark as visited"></td>
-                `;
-
-                tr.querySelector('.visit-checkbox').addEventListener('change', function() {
-                    updateVisitedState(idx, this.checked);
-                });
-
-                let card = document.createElement('div');
-                card.className = `place-card ${isVisited ? 'visited' : ''}`;
-                card.setAttribute('data-index', idx);
-                card.setAttribute('data-name', item.name.toLowerCase());
-                card.setAttribute('data-address', item.address.toLowerCase());
-                card.innerHTML = `
-                    <div class="card-content">
-                        <a class="card-title" href="${mapUrl}" target="_blank">${item.name}</a>
-                        <div class="card-address">${item.address}</div>
-                    </div>
-                    <div class="card-footer">
-                        <span>Visited</span>
-                        <input type="checkbox" class="visit-checkbox" ${isVisited ? 'checked' : ''} title="Mark as visited">
-                    </div>
-                `;
-
-                card.querySelector('.visit-checkbox').addEventListener('change', function() {
-                    updateVisitedState(idx, this.checked);
-                });
-
-                let matchesSearch = item.name.toLowerCase().includes(input) || item.address.toLowerCase().includes(input);
-                let displayVal = matchesSearch ? "" : "none";
-                tr.style.display = displayVal;
-                card.style.display = displayVal;
-
-                tbody.appendChild(tr);
-                gridContainer.appendChild(card);
-            });
+            document.getElementById('totalCount').textContent = total;
+            let percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+            document.getElementById('progressBarFill').style.width = percentage + '%';
         }
 
         function updateVisitedState(index, isChecked) {
-            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_multiview')) || {};
+            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_gridview')) || {};
             let placeName = placesData[index].name.toLowerCase();
 
             if (isChecked) {
@@ -725,8 +687,8 @@
             } else {
                 delete visitedData[placeName];
             }
-            localStorage.setItem('visitedPlaces_multiview', JSON.stringify(visitedData));
-            updateVisitedCount();
+            localStorage.setItem('visitedPlaces_gridview', JSON.stringify(visitedData));
+            updateStats();
 
             document.querySelectorAll(`[data-index="${index}"]`).forEach(el => {
                 let checkbox = el.querySelector('.visit-checkbox');
@@ -740,8 +702,139 @@
             });
         }
 
-        function filterPlaces() {
-            applyFilterAndSort();
+        function applyFiltersAndSort() {
+            let searchInput = document.getElementById('searchInput').value.toLowerCase();
+            let sortOption = document.getElementById('sortSelect').value;
+            let visitedData = JSON.parse(localStorage.getItem('visitedPlaces_gridview')) || {};
+            
+            let gridContainer = document.getElementById('gridViewContainer');
+            let cards = Array.from(gridContainer.getElementsByClassName('place-card'));
+            
+            let visibleCount = 0;
+            cards.forEach(card => {
+                let name = card.getAttribute('data-name');
+                let address = card.getAttribute('data-address');
+                let region = card.getAttribute('data-region');
+
+                let matchesSearch = name.includes(searchInput) || address.includes(searchInput);
+                let matchesRegion = (selectedRegion === 'All' || region === selectedRegion);
+
+                if (matchesSearch && matchesRegion) {
+                    card.style.display = "";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            cards.sort((a, b) => {
+                let idxA = parseInt(a.getAttribute('data-index'));
+                let idxB = parseInt(b.getAttribute('data-index'));
+                let itemA = placesData[idxA];
+                let itemB = placesData[idxB];
+                let visitA = !!visitedData[itemA.name.toLowerCase()];
+                let visitB = !!visitedData[itemB.name.toLowerCase()];
+
+                if (sortOption === 'name-asc') {
+                    return itemA.name.localeCompare(itemB.name);
+                } else if (sortOption === 'name-desc') {
+                    return itemB.name.localeCompare(itemA.name);
+                } else if (sortOption === 'unvisited') {
+                    if (visitA !== visitB) return visitA ? 1 : -1;
+                    return idxA - idxB;
+                } else {
+                    return idxA - idxB;
+                }
+            });
+
+            cards.forEach(card => gridContainer.appendChild(card));
+
+            let emptyState = document.getElementById('emptyState');
+            emptyState.style.display = visibleCount === 0 ? "block" : "none";
+        }
+
+        /* Modal Handlers */
+        function openAddModal() {
+            document.getElementById('newPlaceName').value = '';
+            document.getElementById('newPlaceAddress').value = '';
+            document.getElementById('addModal').style.display = 'flex';
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').style.display = 'none';
+        }
+
+        function saveNewPlace() {
+            let name = document.getElementById('newPlaceName').value.trim();
+            let address = document.getElementById('newPlaceAddress').value.trim();
+
+            if (!name || !address) {
+                alert('Please provide both a place name and an address.');
+                return;
+            }
+
+            placesData.push({ name, address });
+            localStorage.setItem('customPlacesList', JSON.stringify(placesData));
+            closeAddModal();
+            renderCards();
+            updateStats();
+        }
+
+        /* Export, Import, Reset Functionality */
+        function exportData() {
+            let exportObj = {
+                places: placesData,
+                visited: JSON.parse(localStorage.getItem('visitedPlaces_gridview')) || {}
+            };
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
+            let downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "explore_bangalore_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function triggerImport() {
+            document.getElementById('importFile').click();
+        }
+
+        function importData(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let imported = JSON.parse(e.target.result);
+                    if (imported.places && Array.isArray(imported.places)) {
+                        placesData = imported.places;
+                        localStorage.setItem('customPlacesList', JSON.stringify(placesData));
+                        if (imported.visited) {
+                            localStorage.setItem('visitedPlaces_gridview', JSON.stringify(imported.visited));
+                        }
+                        renderCards();
+                        updateStats();
+                        alert('Data imported successfully!');
+                    } else {
+                        alert('Invalid backup file format.');
+                    }
+                } catch (err) {
+                    alert('Error parsing JSON file.');
+                }
+                event.target.value = ''; // Reset file input
+            };
+            reader.readAsText(file);
+        }
+
+        function resetData() {
+            if (confirm('Are you sure you want to reset all custom places and visited checks back to default?')) {
+                localStorage.removeItem('customPlacesList');
+                localStorage.removeItem('visitedPlaces_gridview');
+                placesData = [...defaultPlacesData];
+                renderCards();
+                updateStats();
+            }
         }
     </script>
 
